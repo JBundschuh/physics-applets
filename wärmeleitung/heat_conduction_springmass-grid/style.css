@@ -1,0 +1,247 @@
+:root {
+  --bg: #f4f6fb;
+  --card: #ffffff;
+  --text: #1d2433;
+  --muted: #657086;
+  --line: #d8deea;
+  --accent: #2f6df6;
+  --accent-dark: #1d4fc2;
+  --accent-soft: #e9efff;
+  --warm: #f97316;
+  --shadow: 0 18px 45px rgba(30, 40, 70, 0.12);
+  --radius: 18px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  color: var(--text);
+  background: radial-gradient(circle at top left, #eef4ff 0, var(--bg) 38%, #f8f9fc 100%);
+}
+
+.page-header,
+.page-footer {
+  width: min(1420px, calc(100vw - 32px));
+  margin: 0 auto;
+}
+
+.page-header {
+  padding: 32px 0 18px;
+}
+
+h1 {
+  margin: 0;
+  font-size: clamp(2rem, 4vw, 3.3rem);
+  line-height: 1.05;
+}
+
+.subtitle {
+  max-width: 950px;
+  margin: 12px 0 0;
+  color: var(--muted);
+  font-size: 1.02rem;
+}
+
+.app-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 410px;
+  gap: 22px;
+  width: min(1420px, calc(100vw - 32px));
+  margin: 0 auto;
+  align-items: start;
+}
+
+.visual-card,
+.control-card {
+  background: rgba(255, 255, 255, 0.94);
+  border: 1px solid rgba(216, 222, 234, 0.9);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+
+.canvas-toolbar,
+.diagram-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  align-items: center;
+  padding: 16px 18px;
+  border-bottom: 1px solid var(--line);
+}
+
+.canvas-toolbar strong,
+.diagram-header strong {
+  display: block;
+  font-size: 1.05rem;
+}
+
+.canvas-toolbar span,
+.diagram-header span {
+  display: block;
+  margin-top: 2px;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.status-pill {
+  flex: 0 0 auto;
+  padding: 7px 12px;
+  border-radius: 999px;
+  background: var(--accent-soft);
+  color: var(--accent-dark);
+  font-weight: 700;
+  font-size: 0.85rem;
+}
+
+#sim_canvas,
+#profile_canvas {
+  display: block;
+  width: 100%;
+  height: auto;
+  background: linear-gradient(180deg, #ffffff 0%, #f9fbff 100%);
+}
+
+.diagram-panel {
+  border-top: 1px solid var(--line);
+}
+
+.control-card {
+  padding: 0;
+}
+
+.control-section {
+  padding: 18px;
+  border-bottom: 1px solid var(--line);
+}
+
+.control-section:last-child {
+  border-bottom: 0;
+}
+
+.control-section h2 {
+  margin: 0 0 14px;
+  font-size: 1.05rem;
+}
+
+.button-row {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+
+button {
+  appearance: none;
+  border: 1px solid var(--line);
+  background: #fff;
+  color: var(--text);
+  border-radius: 12px;
+  padding: 9px 12px;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+button:hover {
+  border-color: var(--accent);
+}
+
+.primary-button {
+  background: var(--accent);
+  color: white;
+  border-color: var(--accent);
+}
+
+.slider-label {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+  margin: 14px 0 6px;
+  font-weight: 700;
+}
+
+.slider-label output {
+  color: var(--accent-dark);
+  font-variant-numeric: tabular-nums;
+}
+
+input[type="range"] {
+  width: 100%;
+}
+
+.checkbox-row {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  margin: 14px 0 0;
+  line-height: 1.35;
+}
+
+.checkbox-row input {
+  margin-top: 3px;
+}
+
+.microcopy {
+  margin: 7px 0 0;
+  color: var(--muted);
+  font-size: 0.88rem;
+  line-height: 1.45;
+}
+
+.stats-box dl {
+  margin: 0;
+  display: grid;
+  gap: 8px;
+}
+
+.stats-box dl div {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 8px 10px;
+  border-radius: 12px;
+  background: #f6f8fc;
+}
+
+.stats-box dt {
+  color: var(--muted);
+}
+
+.stats-box dd {
+  margin: 0;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+
+.formula-box p {
+  margin: 0 0 10px;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+.formula-box .formula {
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: #f6f8fc;
+  color: var(--text);
+  font-weight: 800;
+  text-align: center;
+}
+
+.page-footer {
+  padding: 18px 0 36px;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+@media (max-width: 1050px) {
+  .app-layout {
+    grid-template-columns: 1fr;
+  }
+}

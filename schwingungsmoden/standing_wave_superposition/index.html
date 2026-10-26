@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Standing Wave Superposition</title>
+
+  <link rel="stylesheet" href="./style.css" />
+</head>
+<body>
+  <header class="page-header">
+    <div>
+      <p class="eyebrow">Physics Applet</p>
+      <h1>Standing Wave Superposition</h1>
+      <p class="subtitle">
+        Discrete model of normal modes with fixed boundaries. Motion is calculated directly from sine functions,
+        rather than by numerically solving equations of motion.
+      </p>
+    </div>
+  </header>
+
+  <main class="app-layout">
+    <section class="canvas-card">
+      <div class="canvas-toolbar">
+        <div>
+          <strong id="view_title">1D String with Fixed Ends</strong>
+          <span id="view_hint">Discrete nodes connected by straight lines.</span>
+        </div>
+        <div id="status_text" class="status-pill">Paused</div>
+      </div>
+
+      <canvas id="sim_canvas" width="1000" height="620" aria-label="Standing wave simulation"></canvas>
+    </section>
+
+    <aside class="control-card">
+      <section class="control-section">
+        <h2>Model</h2>
+        <label class="field-label" for="model_select">View</label>
+        <select id="model_select">
+          <option value="1d" selected>1D String</option>
+          <option value="2d">2D Lattice</option>
+        </select>
+      </section>
+
+      <section class="control-section">
+        <h2>Animation</h2>
+        <div class="button-row">
+          <button id="play_button" class="primary-button">▶ Play</button>
+          <button id="reset_button">Reset</button>
+        </div>
+
+        <label class="slider-label" for="speed_slider">
+          <span>Speed</span>
+          <output id="speed_value">1.00×</output>
+        </label>
+        <input id="speed_slider" type="range" min="0" max="3" step="0.05" value="1" />
+
+        <label class="slider-label" for="phase_slider">
+          <span>Time / Phase</span>
+          <output id="phase_value">0°</output>
+        </label>
+        <input id="phase_slider" type="range" min="0" max="360" step="1" value="0" />
+
+        <label class="checkbox-row">
+          <input id="physical_frequency_checkbox" type="checkbox" checked />
+          <span>Physical frequency ratios</span>
+        </label>
+
+        <label class="checkbox-row">
+          <input id="show_modes_checkbox" type="checkbox" checked />
+          <span>Show individual modes (transparent)</span>
+        </label>
+      </section>
+
+      <section id="controls_1d" class="control-section model-controls">
+        <h2>1D String</h2>
+
+        <label class="slider-label" for="elements_1d_slider">
+          <span>Elements</span>
+          <output id="elements_1d_value">24</output>
+        </label>
+        <input id="elements_1d_slider" type="range" min="4" max="80" step="1" value="24" />
+        <p class="microcopy">24 elements form 25 nodes. Both endpoints remain fixed.</p>
+
+        <label class="slider-label" for="active_modes_1d_slider">
+          <span>Number of modes</span>
+          <output id="active_modes_1d_value">3</output>
+        </label>
+        <input id="active_modes_1d_slider" type="range" min="1" max="5" step="1" value="3" />
+
+        <div id="amplitude_controls_1d" class="amplitude-list"></div>
+      </section>
+
+      <section id="controls_2d" class="control-section model-controls hidden">
+        <h2>2D Lattice</h2>
+
+        <label class="slider-label" for="mode_count_2d_slider">
+          <span>Interior masses / modes per axis</span>
+          <output id="mode_count_2d_value">3 × 3</output>
+        </label>
+        <input id="mode_count_2d_slider" type="range" min="1" max="5" step="1" value="3" />
+        <p class="microcopy">
+          A 3 × 3 interior lattice has a 3 × 3 mode matrix. Click a cell to toggle its mode.
+        </p>
+
+        <label class="field-label" for="direction_2d_select">Global displacement direction</label>
+        <select id="direction_2d_select">
+          <option value="y" selected>y direction</option>
+          <option value="x">x direction</option>
+          <option value="diagonal">Diagonal (x and y)</option>
+        </select>
+
+        <label class="slider-label" for="displacement_scale_2d_slider">
+          <span>Displacement scale</span>
+          <output id="displacement_scale_2d_value">1.00×</output>
+        </label>
+        <input id="displacement_scale_2d_slider" type="range" min="0.2" max="2" step="0.05" value="1" />
+
+        <div class="mode-matrix-header">
+          <span>Mode matrix</span>
+          <span><output id="active_modes_2d_value">1</output> active</span>
+        </div>
+        <div id="mode_matrix_2d" class="mode-matrix" aria-label="2D mode matrix"></div>
+        <p class="microcopy">
+          Columns: mode number m along x. Rows: mode number n along y.
+        </p>
+      </section>
+
+      <section class="control-section formula-box">
+        <h2>Model equations</h2>
+        <div id="formula_text"></div>
+      </section>
+    </aside>
+  </main>
+
+  <footer class="page-footer">
+    <p>
+      Note: This is a simplified educational model. It superimposes predefined mode shapes
+      without numerically solving differential equations.
+    </p>
+  </footer>
+
+  <!-- The model and rendering run directly in JavaScript. -->
+  <script src="./main.js"></script>
+</body>
+</html>

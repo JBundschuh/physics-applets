@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Schallausbreitung im Festkörper</title>
+  <link rel="stylesheet" href="https://pyscript.net/releases/2024.1.1/core.css" />
+  <link rel="stylesheet" href="./style.css" />
+  <script type="module" src="https://pyscript.net/releases/2024.1.1/core.js"></script>
+</head>
+<body>
+  <main class="app-shell">
+    <header class="hero">
+      <div>
+        <p class="eyebrow">Feder-Masse-Modell</p>
+        <h1>Schallausbreitung im Festkörper</h1>
+        <p>Die Gitterbausteine schwingen lokal, während mechanische Energie durch das Medium transportiert wird.</p>
+      </div>
+      <div class="status" aria-live="polite">
+        <span id="status_text">bereit</span>
+        <strong>t = <span id="time_value">0.00</span></strong>
+      </div>
+    </header>
+
+    <section class="layout">
+      <div class="visuals">
+        <article class="card">
+          <div class="card-heading">
+            <div>
+              <h2>Festkörpermodell</h2>
+              <p>Dunkel = hohe lokale mechanische Energie</p>
+            </div>
+          </div>
+          <canvas id="sim_canvas" width="1040" height="500" aria-label="Longitudinal schwingendes Feder-Masse-Gitter"></canvas>
+        </article>
+
+        <article class="card profile-card">
+          <div class="card-heading">
+            <div>
+              <h2>Auslenkungsprofil</h2>
+              <p>Momentane horizontale Auslenkung der Materialschichten</p>
+            </div>
+          </div>
+          <canvas id="profile_canvas" width="1040" height="280" aria-label="Vergleich von Gittermodell und Kontinuumsnäherung"></canvas>
+          <div class="curve-legend">
+            <span><i class="solid"></i> Gittermodell</span>
+            <span id="continuum_legend" hidden><i class="dashed"></i> Kontinuumsnäherung · 1. Reflexion</span>
+          </div>
+        </article>
+      </div>
+
+      <aside class="card controls">
+        <div class="actions">
+          <button id="pulse_button" class="accent" type="button">Puls aussenden</button>
+          <button id="play_button" type="button">▶ Start</button>
+          <button id="reset_button" class="secondary" type="button">Reset</button>
+        </div>
+
+        <section class="control-group">
+          <label class="select-row">
+            <span>Rechter Rand</span>
+            <select id="boundary_select">
+              <option value="free">frei</option>
+              <option value="fixed">fest</option>
+              <option value="absorbing" selected>absorbierend</option>
+            </select>
+          </label>
+
+          <label class="slider-row">
+            <span>Federsteifigkeit <em>k</em></span>
+            <input id="stiffness_slider" type="range" min="0.5" max="8" step="0.1" value="4.0" />
+            <output id="stiffness_value">4.0</output>
+          </label>
+
+          <label class="slider-row">
+            <span>Masse <em>m</em></span>
+            <input id="mass_slider" type="range" min="0.3" max="3" step="0.1" value="1.0" />
+            <output id="mass_value">1.0</output>
+          </label>
+
+          <label class="slider-row">
+            <span>Pulsamplitude</span>
+            <input id="amplitude_slider" type="range" min="0.08" max="0.55" step="0.01" value="0.30" />
+            <output id="amplitude_value">0.30</output>
+          </label>
+
+          <label class="slider-row">
+            <span>Tempo</span>
+            <input id="speed_slider" type="range" min="0.25" max="3" step="0.05" value="1.0" />
+            <output id="speed_value">1.00×</output>
+          </label>
+        </section>
+
+        <section class="control-group compact">
+          <label class="check-row">
+            <input id="continuum_checkbox" type="checkbox" />
+            <span>Kontinuumsnäherung anzeigen</span>
+          </label>
+          <p>Einschließlich erster Reflexion am rechten Rand</p>
+        </section>
+
+        <details class="control-group">
+          <summary>Periodische Anregung</summary>
+          <label class="check-row">
+            <input id="driver_checkbox" type="checkbox" />
+            <span>Signalgenerator aktiv</span>
+          </label>
+          <label class="slider-row">
+            <span>Frequenz <em>f</em></span>
+            <input id="frequency_slider" type="range" min="0.05" max="0.80" step="0.01" value="0.20" />
+            <output id="frequency_value">0.20</output>
+          </label>
+        </details>
+
+        <details class="model-note">
+          <summary>Modell</summary>
+          <p>Jede Spalte ist eine Materialschicht mit gemeinsamer longitudinaler Auslenkung. Berechnet werden ausschließlich Newtons Gesetz und die Kräfte benachbarter Federn.</p>
+          <div class="formula">m üⱼ = k(uⱼ₊₁ − 2uⱼ + uⱼ₋₁)</div>
+        </details>
+      </aside>
+    </section>
+
+    <noscript>Für das Applet muss JavaScript aktiviert sein.</noscript>
+    <py-error class="py-error"></py-error>
+  </main>
+  <script type="py" src="./main.py" config="./pyscript.toml"></script>
+</body>
+</html>

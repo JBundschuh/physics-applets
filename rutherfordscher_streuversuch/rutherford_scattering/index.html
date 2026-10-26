@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Rutherford Scattering – Interactive Physics Applet</title>
+  <link rel="stylesheet" href="./style.css" />
+  <script src="./main.js" defer></script>
+</head>
+<body>
+  <header class="page-header">
+    <div>
+      <h1>Rutherford Scattering</h1>
+      <p class="subtitle">Alpha-particle trajectories and scattering angles near gold nuclei</p>
+    </div>
+  </header>
+
+  <main class="app-shell">
+    <section class="visual-card">
+      <canvas id="simulation-canvas" width="1060" height="650" aria-label="Rutherford scattering simulation"></canvas>
+      <div id="status-line" class="status-line">Loading simulation…</div>
+    </section>
+
+    <aside class="control-card" aria-label="Simulation controls">
+      <div class="control-group">
+        <h2>View</h2>
+        <label class="radio-row">
+          <input type="radio" name="mode" value="micro" checked />
+          <span>Particle trajectories</span>
+        </label>
+        <label class="radio-row">
+          <input type="radio" name="mode" value="stats" />
+          <span>Scattering statistics</span>
+        </label>
+      </div>
+
+      <div class="control-row buttons">
+        <button id="start-pause" type="button">Pause</button>
+        <button id="reset" type="button" class="secondary">Reset</button>
+      </div>
+
+      <div class="control-group sliders">
+        <h2>Parameters</h2>
+        <label>
+          <span>Alpha energy Eα: <strong id="energy-value">5.0</strong> MeV</span>
+          <input id="energy" type="range" min="3" max="9" step="0.1" value="5" />
+        </label>
+        <label>
+          <span>Nuclear charge Z: <strong id="charge-value">79</strong></span>
+          <input id="charge" type="range" min="10" max="100" step="1" value="79" />
+        </label>
+        <label>
+          <span>Particle rate: <strong id="rate-value">24</strong> / s</span>
+          <input id="rate" type="range" min="1" max="80" step="1" value="24" />
+        </label>
+        <label>
+          <span>Speed: <strong id="speed-value">1.0</strong>×</span>
+          <input id="speed" type="range" min="0.25" max="2" step="0.05" value="1" />
+        </label>
+        <label>
+          <span>Foil thickness d: <strong id="thickness-value">400</strong> nm</span>
+          <input id="thickness" type="range" min="50" max="1500" step="50" value="400" />
+        </label>
+      </div>
+
+      <div class="control-group checks">
+        <h2>Display options</h2>
+        <div id="micro-options">
+          <label><input id="show-trails" type="checkbox" checked /> Particle trails</label>
+          <label><input id="show-potential" type="checkbox" /> Show Coulomb field</label>
+        </div>
+        <div id="stats-options">
+          <label><input id="log-histogram" type="checkbox" checked /> Logarithmic histogram</label>
+        </div>
+      </div>
+
+      <div id="count-panel" class="readout-card">
+        <h2>Counts</h2>
+        <dl>
+          <div><dt>Total</dt><dd id="count-total">0</dd></div>
+          <div><dt>0°–5°</dt><dd id="count-straight">0</dd></div>
+          <div><dt>5°–30°</dt><dd id="count-light">0</dd></div>
+          <div><dt>30°–90°</dt><dd id="count-strong">0</dd></div>
+          <div><dt>90°–180°</dt><dd id="count-back">0</dd></div>
+        </dl>
+      </div>
+
+      <div class="info-card">
+        <h2>Model note</h2>
+        <p id="info-text">Qualitative model, not to scale.</p>
+      </div>
+    </aside>
+  </main>
+
+  <footer class="page-footer">
+    <p>Trajectory view: scaled Coulomb field. Statistics: scattering angles from an impact-parameter model.</p>
+  </footer>
+</body>
+</html>

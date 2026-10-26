@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Temperaturfeld-Wärmeleitung</title>
+
+  <!--
+    Moderne PyScript-Einbindung.
+    Der eigentliche Python-Code liegt in main.py.
+    Wichtig: Das Applet sollte über einen lokalen Webserver gestartet werden,
+    nicht per Doppelklick auf die HTML-Datei.
+  -->
+  <link rel="stylesheet" href="https://pyscript.net/releases/2026.3.1/core.css" />
+  <script type="module" src="https://pyscript.net/releases/2026.3.1/core.js"></script>
+
+  <link rel="stylesheet" href="./style.css" />
+</head>
+<body>
+  <header class="page-header">
+    <h1>Temperaturfeld-Wärmeleitung</h1>
+    <p class="subtitle">
+      Vereinfachtes Feder-Masse-Modell der Wärmeleitung im Festkörper.
+      Die Knotenbewegung veranschaulicht thermische Bewegung, die Farbe die lokale Gesamtenergie.
+    </p>
+  </header>
+
+  <main class="app-layout">
+    <section class="visual-card">
+      <div class="canvas-toolbar">
+        <div>
+          <strong>Feder-Masse-Gitter</strong>
+          <span>10 × 10 Knoten mit gekoppelten Nachbarn.</span>
+        </div>
+        <div id="status_text" class="status-pill">Pause</div>
+      </div>
+
+      <canvas id="sim_canvas" width="900" height="590" aria-label="Feder-Masse-Gitter zur Wärmeleitung"></canvas>
+
+      <div class="diagram-panel">
+        <div class="diagram-header">
+          <div>
+            <strong>Energieprofil</strong>
+            <span>Gesamtenergie je Spalte (kinetisch + potenziell)</span>
+          </div>
+        </div>
+        <canvas id="profile_canvas" width="900" height="210" aria-label="Gesamtenergieprofil über die Gitterspalten"></canvas>
+      </div>
+    </section>
+
+    <aside class="control-card">
+      <section class="control-section">
+        <h2>Simulation</h2>
+        <div class="button-row">
+          <button id="play_button" class="primary-button">▶ Start</button>
+          <button id="reset_button">Zurücksetzen</button>
+        </div>
+
+        <label class="slider-label" for="speed_slider">
+          <span>Geschwindigkeit</span>
+          <output id="speed_value">1.00×</output>
+        </label>
+        <input id="speed_slider" type="range" min="0.1" max="3" step="0.05" value="1" />
+
+        <label class="slider-label" for="stiffness_slider">
+          <span>Gittersteifigkeit / Kopplung</span>
+          <output id="stiffness_value">5.00</output>
+        </label>
+        <input id="stiffness_slider" type="range" min="5.0" max="10.0" step="0.10" value="5.0" />
+        <p class="microcopy">
+          Höhere Kopplung ermöglicht schnelleren Energieaustausch zwischen Nachbarn.
+        </p>
+      </section>
+
+      <section class="control-section">
+        <h2>Anfangstemperaturen</h2>
+
+        <label class="slider-label" for="temp_left_slider">
+          <span>Links</span>
+          <output id="temp_left_value">100</output>
+        </label>
+        <input id="temp_left_slider" type="range" min="0" max="120" step="1" value="100" />
+
+        <label class="slider-label" for="temp_middle_slider">
+          <span>Innen</span>
+          <output id="temp_middle_value">20</output>
+        </label>
+        <input id="temp_middle_slider" type="range" min="0" max="120" step="1" value="20" />
+
+        <label class="slider-label" for="temp_right_slider">
+          <span>Rechts</span>
+          <output id="temp_right_value">20</output>
+        </label>
+        <input id="temp_right_slider" type="range" min="0" max="120" step="1" value="20" />
+
+        <label class="checkbox-row">
+          <input id="thermostat_checkbox" type="checkbox" />
+          <span>Randtemperaturen festhalten</span>
+        </label>
+        <p class="microcopy">
+          Aktiv: Linke und rechte Spalte wirken als Wärmebäder.
+        </p>
+      </section>
+
+      <section class="control-section stats-box">
+        <h2>Messwerte</h2>
+        <dl>
+          <div>
+            <dt>Mittlere Modelltemperatur</dt>
+            <dd id="mean_temp_value">–</dd>
+          </div>
+          <div>
+            <dt>Temperaturdifferenz ΔT</dt>
+            <dd id="delta_temp_value">–</dd>
+          </div>
+          <div>
+            <dt>Kinetische Energie</dt>
+            <dd id="kin_energy_value">–</dd>
+          </div>
+          <div>
+            <dt>Federenergie</dt>
+            <dd id="spring_energy_value">–</dd>
+          </div>
+          <div>
+            <dt>Gesamtenergie</dt>
+            <dd id="total_energy_value">–</dd>
+          </div>
+          <div>
+            <dt>Relative Energieänderung</dt>
+            <dd id="energy_drift_value">–</dd>
+          </div>
+        </dl>
+      </section>
+
+      <section class="control-section formula-box">
+        <h2>Modellidee</h2>
+        <p>
+          Die Modelltemperatur hängt von der Bewegungsenergie ab:
+        </p>
+        <p class="formula">T<sub>Modell</sub> ∼ v<sub>x</sub><sup>2</sup> + v<sub>y</sub><sup>2</sup></p>
+        <p>
+          Federn koppeln benachbarte Knoten. Zufällige Richtungsänderungen machen die Bewegung ungeordneter,
+          ohne dabei die kinetische Energie zu verändern.
+        </p>
+      </section>
+    </aside>
+  </main>
+
+  <footer class="page-footer">
+    <p>
+      Modellgrenze: Das Applet ist keine exakte Atomsimulation. Die Knoten stehen vereinfacht für Bereiche eines Festkörpers.
+    </p>
+  </footer>
+
+  <script type="py" src="./main.py"></script>
+</body>
+</html>

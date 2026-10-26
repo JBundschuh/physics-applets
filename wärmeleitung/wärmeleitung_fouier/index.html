@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Temperaturfeld-Wärmeleitung · Fourier-Modell</title>
+
+  <!-- Aktuelle PyScript-Einbindung. Es werden keine externen Python-Pakete genutzt. -->
+  <link rel="stylesheet" href="https://pyscript.net/releases/2025.5.1/core.css" />
+  <script type="module" src="https://pyscript.net/releases/2025.5.1/core.js"></script>
+
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main class="page">
+    <header class="hero">
+      <div>
+        <h1>Temperaturfeld-Wärmeleitung</h1>
+        <p class="subtitle">
+          Die Wärmeleitung wird in einer Dimension berechnet. Die Bewegung der Gitterpunkte dient nur der Veranschaulichung.
+        </p>
+      </div>
+    </header>
+
+    <section class="layout">
+      <aside class="controls card">
+        <section class="control-section">
+          <h2>Simulation</h2>
+          <div class="button-row">
+            <button id="play_button" class="primary">▶ Start</button>
+            <button id="reset_button">Zurücksetzen</button>
+          </div>
+
+          <label class="slider-label" for="speed_slider">
+            <span>Geschwindigkeit</span>
+            <output id="speed_value">1.00×</output>
+          </label>
+          <input id="speed_slider" type="range" min="0.2" max="4" step="0.1" value="1" />
+        </section>
+
+        <section class="control-section">
+          <h2>Anfangstemperaturen</h2>
+
+          <label class="slider-label" for="temp_left_slider">
+            <span>Links</span>
+            <output id="temp_left_value">100</output>
+          </label>
+          <input id="temp_left_slider" type="range" min="0" max="120" step="1" value="100" />
+
+          <label class="slider-label" for="temp_middle_slider">
+            <span>Innen</span>
+            <output id="temp_middle_value">20</output>
+          </label>
+          <input id="temp_middle_slider" type="range" min="0" max="120" step="1" value="20" />
+
+          <label class="slider-label" for="temp_right_slider">
+            <span>Rechts</span>
+            <output id="temp_right_value">20</output>
+          </label>
+          <input id="temp_right_slider" type="range" min="0" max="120" step="1" value="20" />
+
+          <label class="checkbox-row">
+            <input id="thermostat_checkbox" type="checkbox" />
+            <span>Randtemperaturen festhalten</span>
+          </label>
+        </section>
+
+        <section class="control-section">
+          <h2>Modellparameter</h2>
+
+          <label class="slider-label" for="diffusion_slider">
+            <span>Austauschfaktor a</span>
+            <output id="diffusion_value">0.18</output>
+          </label>
+          <input id="diffusion_slider" type="range" min="0.02" max="0.45" step="0.01" value="0.18" />
+        </section>
+
+      </aside>
+
+      <section class="visuals">
+        <article class="card canvas-card">
+          <div class="card-header">
+            <div>
+              <h2>Gitterdarstellung</h2>
+            </div>
+          </div>
+          <canvas id="sim_canvas" width="760" height="520"></canvas>
+        </article>
+
+        <article class="card canvas-card">
+          <div class="card-header">
+            <div>
+              <h2>Temperaturprofil</h2>
+            </div>
+          </div>
+          <canvas id="profile_canvas" width="760" height="230"></canvas>
+        </article>
+
+        <article class="card stats-card">
+          <h2>Messwerte</h2>
+          <div class="stats-grid">
+            <div>
+              <span>mittlere Temperatur</span>
+              <strong id="mean_temp_value">–</strong>
+            </div>
+            <div>
+              <span>Temperaturdifferenz</span>
+              <strong id="delta_temp_value">–</strong>
+            </div>
+            <div>
+              <span>Gesamttemperatur</span>
+              <strong id="total_temp_value">–</strong>
+            </div>
+            <div>
+              <span>Änderung der Gesamttemperatur</span>
+              <strong id="total_drift_value">–</strong>
+            </div>
+          </div>
+        </article>
+
+        <article class="card explanation">
+          <h2>Modellidee</h2>
+          <p>Diskretes 1D-Wärmeleitungsmodell:</p>
+          <p class="formula">
+            Tᵢ<sup>neu</sup> = Tᵢ + a · (Tᵢ₋₁ − 2Tᵢ + Tᵢ₊₁)
+          </p>
+          <p>
+            Die Gitterpunkte bewegen sich abhängig von der Temperatur. Diese Bewegung veranschaulicht
+            die thermische Bewegung, verursacht aber keine Wärmeleitung.
+          </p>
+        </article>
+      </section>
+    </section>
+  </main>
+
+  <script type="py" src="./main.py"></script>
+</body>
+</html>

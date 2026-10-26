@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Physics Applet: Particle Motion</title>
+  <link rel="stylesheet" href="./style.css" />
+  <script src="./main.js" defer></script>
+</head>
+<body>
+  <main class="page">
+    <header>
+      <h1>Particle Motion and Speed Distribution</h1>
+      <p>
+        This applet illustrates a simple two-dimensional gas model.
+        Particles move inside a box, and their speeds are shown in the histogram below.
+      </p>
+    </header>
+
+    <section class="layout">
+      <section class="card">
+        <h2>Simulation</h2>
+        <canvas id="sim-canvas" width="700" height="380" aria-label="Two-dimensional particle simulation"></canvas>
+      </section>
+
+      <aside class="card controls">
+        <h2>Parameters</h2>
+
+        <label for="temperature">Temperature T</label>
+        <input id="temperature" type="range" min="100" max="1000" step="10" value="300" />
+        <div><span id="temperature-value">300</span> K</div>
+
+        <label for="particle-count">Number of particles N</label>
+        <input id="particle-count" type="range" min="20" max="250" step="10" value="100" />
+        <div><span id="particle-count-value">100</span> particles</div>
+
+        <div class="buttons">
+          <button id="toggle-button">Pause</button>
+          <button id="reset-button">Reset</button>
+        </div>
+
+        <p class="note">
+          Model assumptions: Equal particle masses and radii; elastic collisions;
+          no friction or energy loss; no physical SI scaling; two-dimensional model.
+        </p>
+      </aside>
+    </section>
+
+    <section class="card">
+      <h2>Speed Distribution</h2>
+      <canvas id="hist-canvas" width="900" height="330" aria-label="Histogram of particle speeds and theoretical two-dimensional distribution"></canvas>
+      <p class="note">
+        The theoretical speed distribution is shown for the selected temperature parameter.
+      </p>
+    </section>
+  </main>
+</body>
+</html>

@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Überlagerung stehender Wellen</title>
+
+  <!--
+    PyScript-Einbindung.
+    Die Version 2026.3.1 nutzt die moderne Einbindung über core.css/core.js
+    und externe Python-Dateien mit <script type="py" src="...">.
+  -->
+  <link rel="stylesheet" href="https://pyscript.net/releases/2026.3.1/core.css" />
+  <script type="module" src="https://pyscript.net/releases/2026.3.1/core.js"></script>
+
+  <link rel="stylesheet" href="./style.css" />
+</head>
+<body>
+  <header class="page-header">
+    <div>
+      <p class="eyebrow">Physik-Applet</p>
+      <h1>Überlagerung stehender Wellen</h1>
+      <p class="subtitle">
+        Diskretes Modell für Eigenmoden mit festen Rändern. Die Bewegung wird direkt aus Sinusfunktionen berechnet,
+        nicht numerisch simuliert.
+      </p>
+    </div>
+  </header>
+
+  <main class="app-layout">
+    <section class="canvas-card">
+      <div class="canvas-toolbar">
+        <div>
+          <strong id="view_title">1D-Saite mit festen Enden</strong>
+          <span id="view_hint">Diskrete Knoten, gerade Verbindungslinien.</span>
+        </div>
+        <div id="status_text" class="status-pill">Pause</div>
+      </div>
+
+      <canvas id="sim_canvas" width="1000" height="620" aria-label="Simulation stehender Wellen"></canvas>
+    </section>
+
+    <aside class="control-card">
+      <section class="control-section">
+        <h2>Modell</h2>
+        <label class="field-label" for="model_select">Darstellung</label>
+        <select id="model_select">
+          <option value="1d" selected>1D-Saite</option>
+          <option value="2d">2D-Gitterschwingung</option>
+        </select>
+      </section>
+
+      <section class="control-section">
+        <h2>Animation</h2>
+        <div class="button-row">
+          <button id="play_button" class="primary-button">▶ Play</button>
+          <button id="reset_button">Reset</button>
+        </div>
+
+        <label class="slider-label" for="speed_slider">
+          <span>Geschwindigkeit</span>
+          <output id="speed_value">1.00×</output>
+        </label>
+        <input id="speed_slider" type="range" min="0" max="3" step="0.05" value="1" />
+
+        <label class="slider-label" for="phase_slider">
+          <span>Zeit / Phase</span>
+          <output id="phase_value">0°</output>
+        </label>
+        <input id="phase_slider" type="range" min="0" max="360" step="1" value="0" />
+
+        <label class="checkbox-row">
+          <input id="physical_frequency_checkbox" type="checkbox" checked />
+          <span>physikalische Frequenzverhältnisse</span>
+        </label>
+
+        <label class="checkbox-row">
+          <input id="show_modes_checkbox" type="checkbox" checked />
+          <span>Einzelmoden transparent anzeigen</span>
+        </label>
+      </section>
+
+      <section id="controls_1d" class="control-section model-controls">
+        <h2>1D-Saite</h2>
+
+        <label class="slider-label" for="elements_1d_slider">
+          <span>Elemente</span>
+          <output id="elements_1d_value">24</output>
+        </label>
+        <input id="elements_1d_slider" type="range" min="4" max="80" step="1" value="24" />
+        <p class="microcopy">Bei 24 Elementen entstehen 25 Knoten. Die Endknoten bleiben fest.</p>
+
+        <label class="slider-label" for="active_modes_1d_slider">
+          <span>sichtbare Moden</span>
+          <output id="active_modes_1d_value">3</output>
+        </label>
+        <input id="active_modes_1d_slider" type="range" min="1" max="5" step="1" value="3" />
+
+        <div id="amplitude_controls_1d" class="amplitude-list"></div>
+      </section>
+
+      <section id="controls_2d" class="control-section model-controls hidden">
+        <h2>2D-Gitter</h2>
+
+        <label class="slider-label" for="mode_count_2d_slider">
+          <span>innere Massen / Moden pro Richtung</span>
+          <output id="mode_count_2d_value">3 × 3</output>
+        </label>
+        <input id="mode_count_2d_slider" type="range" min="1" max="5" step="1" value="3" />
+        <p class="microcopy">
+          Bei 3 × 3 inneren Massen gibt es auch 3 × 3 Modenfelder. Ein Klick auf ein Feld schaltet diese Mode ein oder aus.
+        </p>
+
+        <label class="field-label" for="direction_2d_select">globale Schwingungsrichtung</label>
+        <select id="direction_2d_select">
+          <option value="y" selected>y-Richtung</option>
+          <option value="x">x-Richtung</option>
+          <option value="diagonal">diagonal in x- und y-Richtung</option>
+        </select>
+
+        <label class="slider-label" for="displacement_scale_2d_slider">
+          <span>Auslenkungsstärke</span>
+          <output id="displacement_scale_2d_value">1.00×</output>
+        </label>
+        <input id="displacement_scale_2d_slider" type="range" min="0.2" max="2" step="0.05" value="1" />
+
+        <div class="mode-matrix-header">
+          <span>Modenmatrix</span>
+          <span><output id="active_modes_2d_value">1</output> aktiv</span>
+        </div>
+        <div id="mode_matrix_2d" class="mode-matrix" aria-label="2D-Modenmatrix"></div>
+        <p class="microcopy">
+          Spalte: Modenzahl m in x-Richtung. Zeile: Modenzahl n in y-Richtung.
+        </p>
+      </section>
+
+      <section class="control-section formula-box">
+        <h2>Modellgleichung</h2>
+        <div id="formula_text"></div>
+      </section>
+    </aside>
+  </main>
+
+  <footer class="page-footer">
+    <p>
+      Hinweis: Dieses Applet zeigt ein bewusst vereinfachtes didaktisches Modell. Es löst keine Differentialgleichung,
+      sondern überlagert direkt vorgegebene Eigenformen.
+    </p>
+  </footer>
+
+  <!-- Externer Python-Code. Keine zusätzlichen Pakete wie NumPy nötig. -->
+  <script type="py" src="./main.py"></script>
+</body>
+</html>

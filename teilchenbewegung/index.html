@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Physik-Applet: Teilchenbewegung</title>
+
+  <!-- PyScript laden: Python-Code kann dadurch im Browser laufen. -->
+  <link rel="stylesheet" href="https://pyscript.net/releases/2026.3.1/core.css">
+  <script type="module" src="https://pyscript.net/releases/2026.3.1/core.js"></script>
+
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main class="seite">
+    <header>
+      <h1>Teilchenbewegung und Geschwindigkeitsverteilung</h1>
+      <p>
+        Dieses Applet zeigt ein einfaches zweidimensionales Gasmodell.
+        Die Teilchen bewegen sich in einem Kasten, ihre Geschwindigkeiten
+        ist unten als Histogramm dargestellt.
+      </p>
+    </header>
+
+    <section class="layout">
+      <section class="karte">
+        <h2>Simulation</h2>
+        <canvas id="sim-canvas" width="700" height="380"></canvas>
+      </section>
+
+      <aside class="karte steuerung">
+        <h2>Parameter</h2>
+
+        <label for="temperature">Temperatur T</label>
+        <input id="temperature" type="range" min="100" max="1000" step="10" value="300" />
+        <div><span id="temperature-value">300</span> K</div>
+
+        <label for="particle-count">Teilchenzahl N</label>
+        <input id="particle-count" type="range" min="20" max="250" step="10" value="100" />
+        <div><span id="particle-count-value">100</span> Teilchen</div>
+
+        <div class="buttons">
+          <button id="toggle-button">Pause</button>
+          <button id="reset-button">Reset</button>
+        </div>
+
+        <p class="hinweis">
+              Modellannahme: 
+            Alle Teilchen haben gleiche Masse
+            Alle Teilchen haben gleichen Radius
+            Stöße sind elastisch
+            Keine Reibung
+            Keine Energieverluste
+            Keine echte SI-Skalierung
+            2D-Modell bleibt erhalten
+        </p>
+      </aside>
+    </section>
+
+    <section class="karte">
+      <h2>Geschwindigkeitsverteilung</h2>
+      <canvas id="hist-canvas" width="900" height="330"></canvas>
+      <p class="hinweis">
+        theoretische Geschwindigkeitsverteilung-Kurve zum gewählten
+        Temperaturparameter.
+      </p>
+    </section>
+  </main>
+
+  <!-- PyScript startet main.py und nutzt pyscript.json als Konfiguration. -->
+  <script type="py" src="./main.py" config="./pyscript.json"></script>
+</body>
+</html>

@@ -1,0 +1,228 @@
+:root {
+  --bg: #eef1f5;
+  --panel: #ffffff;
+  --ink: #172033;
+  --muted: #5f6b7a;
+  --line: #d9dee7;
+  --soft: #f6f8fb;
+  --accent: #334155;
+  --accent-2: #0f766e;
+  --warning: #8a4b00;
+  --shadow: 0 16px 40px rgba(15, 23, 42, 0.12);
+  --radius: 18px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  background: radial-gradient(circle at top left, #ffffff 0, var(--bg) 48%, #e6ebf2 100%);
+  color: var(--ink);
+}
+
+.page-header,
+.page-footer {
+  max-width: 1450px;
+  margin: 0 auto;
+  padding: 24px 28px 10px;
+}
+
+.page-footer {
+  padding: 8px 28px 28px;
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+
+h1 {
+  margin: 0;
+  font-size: clamp(2rem, 4vw, 3.2rem);
+  line-height: 1.05;
+}
+
+.subtitle {
+  margin: 8px 0 0;
+  color: var(--muted);
+  font-size: 1.05rem;
+}
+
+.app-shell {
+  max-width: 1450px;
+  margin: 0 auto;
+  padding: 18px 28px 14px;
+  display: grid;
+  grid-template-columns: minmax(640px, 1fr) 360px;
+  gap: 20px;
+  align-items: start;
+}
+
+.visual-card,
+.control-card {
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(217, 222, 231, 0.9);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+
+.visual-card {
+  padding: 14px;
+}
+
+#simulation-canvas {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 14px;
+  border: 1px solid var(--line);
+  background: #fbfcfe;
+}
+
+.status-line {
+  margin-top: 10px;
+  min-height: 1.4em;
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+
+.control-card {
+  padding: 16px;
+  position: sticky;
+  top: 14px;
+}
+
+.control-group,
+.readout-card,
+.info-card {
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 12px;
+  background: var(--soft);
+  margin-bottom: 12px;
+}
+
+.control-group h2,
+.readout-card h2,
+.info-card h2 {
+  margin: 0 0 10px;
+  font-size: 1rem;
+}
+
+.radio-row,
+.checks label,
+.sliders label {
+  display: block;
+  margin: 8px 0;
+  color: var(--ink);
+}
+
+.radio-row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+small {
+  color: var(--muted);
+}
+
+.control-row.buttons {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin: 0 0 12px;
+}
+
+button {
+  border: 0;
+  border-radius: 12px;
+  padding: 11px 14px;
+  color: white;
+  background: var(--accent);
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 8px 18px rgba(15, 23, 42, 0.14);
+}
+
+button:hover {
+  filter: brightness(1.08);
+}
+
+button.secondary {
+  color: var(--accent);
+  background: #e8edf4;
+  box-shadow: none;
+}
+
+input[type="range"] {
+  width: 100%;
+  accent-color: var(--accent-2);
+}
+
+input[type="checkbox"],
+input[type="radio"] {
+  accent-color: var(--accent-2);
+}
+
+.sliders span {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  font-size: 0.95rem;
+}
+
+.readout-card dl {
+  margin: 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.readout-card div {
+  background: white;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 8px;
+}
+
+.readout-card dt {
+  color: var(--muted);
+  font-size: 0.82rem;
+}
+
+.readout-card dd {
+  margin: 2px 0 0;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+
+.info-card p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.45;
+}
+
+@media (max-width: 1120px) {
+  .app-shell {
+    grid-template-columns: 1fr;
+  }
+
+  .control-card {
+    position: static;
+  }
+}
+
+@media (max-width: 720px) {
+  .page-header,
+  .page-footer,
+  .app-shell {
+    padding-left: 14px;
+    padding-right: 14px;
+  }
+
+  .control-row.buttons,
+  .readout-card dl {
+    grid-template-columns: 1fr;
+  }
+}

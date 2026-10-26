@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Heat Conduction – Spring–Mass Grid</title>
+  <link rel="stylesheet" href="./style.css" />
+  <script src="./main.js" defer></script>
+</head>
+<body>
+  <header class="page-header">
+    <h1>Heat Conduction</h1>
+    <p class="subtitle">
+      Simplified spring–mass model of heat conduction in a solid.
+      Node motion illustrates thermal motion; color represents local total energy.
+    </p>
+  </header>
+
+  <main class="app-layout">
+    <section class="visual-card">
+      <div class="canvas-toolbar">
+        <div>
+          <strong>Spring–mass grid</strong>
+          <span>10 × 10 interconnected nodes.</span>
+        </div>
+        <div id="status_text" class="status-pill">Paused</div>
+      </div>
+
+      <canvas id="sim_canvas" width="900" height="590" aria-label="Spring–mass grid representing heat conduction"></canvas>
+
+      <div class="diagram-panel">
+        <div class="diagram-header">
+          <div>
+            <strong>Energy profile</strong>
+            <span>Total energy per column (kinetic + potential)</span>
+          </div>
+        </div>
+        <canvas id="profile_canvas" width="900" height="210" aria-label="Total energy profile across the grid columns"></canvas>
+      </div>
+    </section>
+
+    <aside class="control-card">
+      <section class="control-section">
+        <h2>Simulation</h2>
+        <div class="button-row">
+          <button id="play_button" class="primary-button">▶ Start</button>
+          <button id="reset_button">Reset</button>
+        </div>
+
+        <label class="slider-label" for="speed_slider">
+          <span>Speed</span>
+          <output id="speed_value">1.00×</output>
+        </label>
+        <input id="speed_slider" type="range" min="0.1" max="3" step="0.05" value="1" />
+
+        <label class="slider-label" for="stiffness_slider">
+          <span>Grid stiffness / coupling</span>
+          <output id="stiffness_value">5.00</output>
+        </label>
+        <input id="stiffness_slider" type="range" min="5.0" max="10.0" step="0.10" value="5.0" />
+        <p class="microcopy">
+          Stronger coupling allows faster energy transfer between neighboring nodes.
+        </p>
+      </section>
+
+      <section class="control-section">
+        <h2>Initial temperatures</h2>
+
+        <label class="slider-label" for="temp_left_slider">
+          <span>Left</span>
+          <output id="temp_left_value">100</output>
+        </label>
+        <input id="temp_left_slider" type="range" min="0" max="120" step="1" value="100" />
+
+        <label class="slider-label" for="temp_middle_slider">
+          <span>Interior</span>
+          <output id="temp_middle_value">20</output>
+        </label>
+        <input id="temp_middle_slider" type="range" min="0" max="120" step="1" value="20" />
+
+        <label class="slider-label" for="temp_right_slider">
+          <span>Right</span>
+          <output id="temp_right_value">20</output>
+        </label>
+        <input id="temp_right_slider" type="range" min="0" max="120" step="1" value="20" />
+
+        <label class="checkbox-row">
+          <input id="thermostat_checkbox" type="checkbox" />
+          <span>Maintain boundary temperatures</span>
+        </label>
+        <p class="microcopy">
+          When enabled, the left and right columns act as heat baths.
+        </p>
+      </section>
+
+      <section class="control-section stats-box">
+        <h2>Measurements</h2>
+        <dl>
+          <div>
+            <dt>Mean model temperature</dt>
+            <dd id="mean_temp_value">–</dd>
+          </div>
+          <div>
+            <dt>Temperature difference ΔT</dt>
+            <dd id="delta_temp_value">–</dd>
+          </div>
+          <div>
+            <dt>Kinetic energy</dt>
+            <dd id="kin_energy_value">–</dd>
+          </div>
+          <div>
+            <dt>Spring energy</dt>
+            <dd id="spring_energy_value">–</dd>
+          </div>
+          <div>
+            <dt>Total energy</dt>
+            <dd id="total_energy_value">–</dd>
+          </div>
+          <div>
+            <dt>Relative energy change</dt>
+            <dd id="energy_drift_value">–</dd>
+          </div>
+        </dl>
+      </section>
+
+      <section class="control-section formula-box">
+        <h2>Model concept</h2>
+        <p>
+          Model temperature depends on the kinetic energy of each node:
+        </p>
+        <p class="formula">T<sub>model</sub> ∼ v<sub>x</sub><sup>2</sup> + v<sub>y</sub><sup>2</sup></p>
+        <p>
+          Springs couple neighboring nodes. Random changes in velocity direction
+          make the motion less ordered without changing its kinetic energy.
+        </p>
+      </section>
+    </aside>
+  </main>
+
+  <footer class="page-footer">
+    <p>
+      Model limitation: This is not an exact atomic simulation. Each node represents a simplified region of a solid.
+    </p>
+  </footer>
+</body>
+</html>

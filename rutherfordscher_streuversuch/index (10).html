@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Rutherford-Streuung – interaktives Physik-Applet</title>
+  <link rel="stylesheet" href="./style.css" />
+  <script type="module" src="https://pyscript.net/releases/2024.3.2/core.js"></script>
+</head>
+<body>
+  <header class="page-header">
+    <div>
+      <h1>Rutherford-Streuung</h1>
+      <p class="subtitle">Bahnen und Streuwinkel von Alphateilchen an Goldkernen</p>
+    </div>
+  </header>
+
+  <main class="app-shell">
+    <section class="visual-card">
+      <canvas id="simulation-canvas" width="1060" height="650" aria-label="Simulation zur Rutherford-Streuung"></canvas>
+      <div id="status-line" class="status-line">Simulation wird geladen …</div>
+    </section>
+
+    <aside class="control-card" aria-label="Bedienelemente">
+      <div class="control-group">
+        <h2>Darstellung</h2>
+        <label class="radio-row">
+          <input type="radio" name="mode" value="micro" checked />
+          <span>Bahnansicht</span>
+        </label>
+        <label class="radio-row">
+          <input type="radio" name="mode" value="stats" />
+          <span>Streuwinkelstatistik</span>
+        </label>
+      </div>
+
+      <div class="control-row buttons">
+        <button id="start-pause" type="button">Pause</button>
+        <button id="reset" type="button" class="secondary">Reset</button>
+      </div>
+
+      <div class="control-group sliders">
+        <h2>Parameter</h2>
+        <label>
+          <span>Alphaenergie Eα: <strong id="energy-value">5.0</strong> MeV</span>
+          <input id="energy" type="range" min="3" max="9" step="0.1" value="5" />
+        </label>
+        <label>
+          <span>Kernladung Z: <strong id="charge-value">79</strong></span>
+          <input id="charge" type="range" min="10" max="100" step="1" value="79" />
+        </label>
+        <label>
+          <span>Teilchenrate: <strong id="rate-value">24</strong> / s</span>
+          <input id="rate" type="range" min="1" max="80" step="1" value="24" />
+        </label>
+        <label>
+          <span>Geschwindigkeit: <strong id="speed-value">1.0</strong>×</span>
+          <input id="speed" type="range" min="0.25" max="2" step="0.05" value="1" />
+        </label>
+        <label>
+          <span>Foliendicke d: <strong id="thickness-value">400</strong> nm</span>
+          <input id="thickness" type="range" min="50" max="1500" step="50" value="400" />
+        </label>
+      </div>
+
+      <div class="control-group checks">
+          <h2>Ansichtoptionen</h2>
+        
+          <div id="micro-options">
+            <label><input id="show-trails" type="checkbox" checked /> Bahnspuren</label>
+            <label><input id="show-potential" type="checkbox" /> Coulombfeld anzeigen</label>
+          </div>
+        
+          <div id="stats-options">
+            <label><input id="log-histogram" type="checkbox" checked /> Logarithmisches Histogramm</label>
+          </div>
+        </div>
+
+      <div id="count-panel" class="readout-card">
+        <h2>Zählwerte</h2>
+        <dl>
+          <div><dt>Gesamt</dt><dd id="count-total">0</dd></div>
+          <div><dt>0°–5°</dt><dd id="count-straight">0</dd></div>
+          <div><dt>5°–30°</dt><dd id="count-light">0</dd></div>
+          <div><dt>30°–90°</dt><dd id="count-strong">0</dd></div>
+          <div><dt>90°–180°</dt><dd id="count-back">0</dd></div>
+        </dl>
+      </div>
+
+      <div class="info-card">
+        <h2>Modellhinweis</h2>
+        <p id="info-text">
+          Qualitatives, nicht maßstäbliches Modell.
+        </p>
+      </div>
+    </aside>
+  </main>
+
+  <footer class="page-footer">
+    <p>
+      Bahnansicht: skaliertes Coulombfeld. Statistik: Streuwinkel aus dem Stoßparametermodell.
+    </p>
+  </footer>
+
+  <script type="py" src="./main.py"></script>
+</body>
+</html>

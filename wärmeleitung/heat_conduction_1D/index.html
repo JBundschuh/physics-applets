@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Temperature-Field Heat Conduction · Fourier Model</title>
+
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main class="page">
+    <header class="hero">
+      <div>
+        <h1>Heat Conduction in a Temperature Field</h1>
+        <p class="subtitle">
+          Heat conduction is calculated in one dimension. The motion of the grid nodes is for visualization only.
+        </p>
+      </div>
+    </header>
+
+    <section class="layout">
+      <aside class="controls card">
+        <section class="control-section">
+          <h2>Simulation</h2>
+          <div class="button-row">
+            <button id="play_button" class="primary">▶ Start</button>
+            <button id="reset_button">Reset</button>
+          </div>
+
+          <label class="slider-label" for="speed_slider">
+            <span>Speed</span>
+            <output id="speed_value">1.00×</output>
+          </label>
+          <input id="speed_slider" type="range" min="0.2" max="4" step="0.1" value="1" />
+        </section>
+
+        <section class="control-section">
+          <h2>Initial temperatures</h2>
+
+          <label class="slider-label" for="temp_left_slider">
+            <span>Left</span>
+            <output id="temp_left_value">100</output>
+          </label>
+          <input id="temp_left_slider" type="range" min="0" max="120" step="1" value="100" />
+
+          <label class="slider-label" for="temp_middle_slider">
+            <span>Interior</span>
+            <output id="temp_middle_value">20</output>
+          </label>
+          <input id="temp_middle_slider" type="range" min="0" max="120" step="1" value="20" />
+
+          <label class="slider-label" for="temp_right_slider">
+            <span>Right</span>
+            <output id="temp_right_value">20</output>
+          </label>
+          <input id="temp_right_slider" type="range" min="0" max="120" step="1" value="20" />
+
+          <label class="checkbox-row">
+            <input id="thermostat_checkbox" type="checkbox" />
+            <span>Fix boundary temperatures</span>
+          </label>
+        </section>
+
+        <section class="control-section">
+          <h2>Model parameter</h2>
+
+          <label class="slider-label" for="diffusion_slider">
+            <span>Exchange factor a</span>
+            <output id="diffusion_value">0.18</output>
+          </label>
+          <input id="diffusion_slider" type="range" min="0.02" max="0.45" step="0.01" value="0.18" />
+        </section>
+
+      </aside>
+
+      <section class="visuals">
+        <article class="card canvas-card">
+          <div class="card-header">
+            <div>
+              <h2>Grid visualization</h2>
+            </div>
+          </div>
+          <canvas id="sim_canvas" width="760" height="520"></canvas>
+        </article>
+
+        <article class="card canvas-card">
+          <div class="card-header">
+            <div>
+              <h2>Temperature profile</h2>
+            </div>
+          </div>
+          <canvas id="profile_canvas" width="760" height="230"></canvas>
+        </article>
+
+        <article class="card stats-card">
+          <h2>Measurements</h2>
+          <div class="stats-grid">
+            <div>
+              <span>Mean temperature</span>
+              <strong id="mean_temp_value">–</strong>
+            </div>
+            <div>
+              <span>Temperature difference</span>
+              <strong id="delta_temp_value">–</strong>
+            </div>
+            <div>
+              <span>Sum of temperatures</span>
+              <strong id="total_temp_value">–</strong>
+            </div>
+            <div>
+              <span>Change in temperature sum</span>
+              <strong id="total_drift_value">–</strong>
+            </div>
+          </div>
+        </article>
+
+        <article class="card explanation">
+          <h2>Model concept</h2>
+          <p>Discrete 1D heat conduction model:</p>
+          <p class="formula">
+            Tᵢ<sup>new</sup> = Tᵢ + a · (Tᵢ₋₁ − 2Tᵢ + Tᵢ₊₁)
+          </p>
+          <p>
+            The grid nodes move according to their temperature. Their motion illustrates
+            thermal agitation but does not cause heat conduction.
+          </p>
+        </article>
+      </section>
+    </section>
+  </main>
+
+  <script src="./main.js" defer></script>
+</body>
+</html>
