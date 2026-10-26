@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Physik-Applet: Elastischer und plastischer Stoß</title>
+
+  <link rel="stylesheet" href="https://pyscript.net/releases/2026.3.1/core.css">
+  <script type="module" src="https://pyscript.net/releases/2026.3.1/core.js"></script>
+
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main class="seite">
+    <header>
+      <h1>Elastischer und plastischer Stoß zweier Körper</h1>
+      <p>
+        Dieses Applet zeigt den eindimensionalen Stoß zweier Blöcke auf einer
+        horizontalen, reibungsfreien Unterlage.
+      </p>
+    </header>
+
+    <section class="layout">
+      <section class="karte">
+        <h2>Simulation</h2>
+        <canvas id="sim-canvas" width="700" height="380"></canvas>
+      </section>
+
+      <aside class="karte steuerung">
+        <h2>Parameter</h2>
+
+        <label for="mass-1">Masse Körper 1</label>
+        <input id="mass-1" type="range" min="1" max="10" step="0.5" value="3" />
+        <div><span id="mass-1-value">3,0</span></div>
+
+        <label for="velocity-1">Geschwindigkeit Körper 1</label>
+        <input id="velocity-1" type="range" min="20" max="250" step="5" value="120" />
+        <div><span id="velocity-1-value">120</span> px/s</div>
+
+        <label for="mass-2">Masse Körper 2</label>
+        <input id="mass-2" type="range" min="1" max="10" step="0.5" value="4" />
+        <div><span id="mass-2-value">4,0</span></div>
+
+        <label for="velocity-2">Geschwindigkeit Körper 2</label>
+        <input id="velocity-2" type="range" min="20" max="250" step="5" value="-100" />
+        <div><span id="velocity-2-value">-100</span> px/s</div>
+
+        <label for="restitution">Stoßzahl e</label>
+        <input id="restitution" type="range" min="0" max="1" step="0.05" value="1" />
+        <div>
+          <span id="restitution-value">1,00</span>
+          <span class="klein">(1 = elastisch, 0 = vollkommen plastisch)</span>
+        </div>
+
+        <label class="checkbox-zeile">
+          <input id="heat-colors" type="checkbox" />
+          dissipierte Energie farbig anzeigen
+        </label>
+
+        <div class="buttons">
+          <button id="start-button">Start</button>
+          <button id="reset-button">Reset</button>
+        </div>
+
+        <p class="hinweis">
+          Nach dem Start werden alle Parameter gesperrt. Erst nach Reset können
+          neue Anfangsbedingungen gewählt werden.
+        </p>
+      </aside>
+    </section>
+
+    <section class="karte">
+      <h2>Auswertung</h2>
+
+      <div class="stats-grid">
+        <div class="stat-card">
+          <h3>Körper 1</h3>
+          <p>Impuls vor dem Stoß: <span id="p1-before">—</span></p>
+          <p>Impuls nach dem Stoß: <span id="p1-after">—</span></p>
+        </div>
+
+        <div class="stat-card">
+          <h3>Körper 2</h3>
+          <p>Impuls vor dem Stoß: <span id="p2-before">—</span></p>
+          <p>Impuls nach dem Stoß: <span id="p2-after">—</span></p>
+        </div>
+
+        <div class="stat-card">
+          <h3>Gesamtsystem</h3>
+          <p>Impuls vor dem Stoß: <span id="p-before">—</span></p>
+          <p>Impuls nach dem Stoß: <span id="p-after">—</span></p>
+          <p>Δp: <span id="delta-p">—</span></p>
+        </div>
+
+        <div class="stat-card">
+          <h3>Energie</h3>
+          <p>E<sub>kin</sub> vor dem Stoß: <span id="e-before">—</span></p>
+          <p>E<sub>kin</sub> nach dem Stoß: <span id="e-after">—</span></p>
+          <p>Dissipierte Energie: <span id="e-diss">—</span></p>
+          <p>ΔE: <span id="delta-e">—</span></p>
+        </div>
+      </div>
+
+      <p class="hinweis">
+        Modellannahmen: 1D-Stoßmodell, horizontale reibungsfreie Unterlage,
+        keine Rotation, keine sichtbare Verformung, gleiche Dichte der Blöcke.
+        Die sichtbare Fläche ist proportional zur Masse.
+      </p>
+    </section>
+  </main>
+
+  <script type="py" src="./main.py"></script>
+</body>
+</html>
