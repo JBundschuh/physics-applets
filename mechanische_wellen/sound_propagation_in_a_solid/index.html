@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Sound Propagation in a Solid</title>
+  <link rel="stylesheet" href="./style.css" />
+  <script src="./main.js" defer></script>
+</head>
+<body>
+  <main class="app-shell">
+    <header class="hero">
+      <div>
+        <p class="eyebrow">Spring–Mass Model</p>
+        <h1>Sound Propagation in a Solid</h1>
+        <p>Material layers oscillate locally while mechanical energy propagates through the solid.</p>
+      </div>
+      <div class="status" aria-live="polite">
+        <span id="status_text">Ready</span>
+        <strong>t = <span id="time_value">0.00</span></strong>
+      </div>
+    </header>
+
+    <section class="layout">
+      <div class="visuals">
+        <article class="card">
+          <div class="card-heading">
+            <div>
+              <h2>Solid Model</h2>
+              <p>Darker nodes indicate higher local mechanical energy</p>
+            </div>
+          </div>
+          <canvas id="sim_canvas" width="1040" height="500" aria-label="Longitudinally oscillating spring–mass lattice"></canvas>
+        </article>
+
+        <article class="card profile-card">
+          <div class="card-heading">
+            <div>
+              <h2>Displacement Profile</h2>
+              <p>Instantaneous longitudinal displacement of material layers</p>
+            </div>
+          </div>
+          <canvas id="profile_canvas" width="1040" height="280" aria-label="Comparison of the discrete lattice and continuum approximation"></canvas>
+          <div class="curve-legend">
+            <span><i class="solid"></i> Lattice model</span>
+            <span id="continuum_legend" hidden><i class="dashed"></i> Continuum approximation · first reflection</span>
+          </div>
+        </article>
+      </div>
+
+      <aside class="card controls">
+        <div class="actions">
+          <button id="pulse_button" class="accent" type="button">Send Pulse</button>
+          <button id="play_button" type="button">▶ Start</button>
+          <button id="reset_button" class="secondary" type="button">Reset</button>
+        </div>
+
+        <section class="control-group">
+          <label class="select-row">
+            <span>Right Boundary</span>
+            <select id="boundary_select">
+              <option value="free">Free</option>
+              <option value="fixed">Fixed</option>
+              <option value="absorbing" selected>Absorbing</option>
+            </select>
+          </label>
+
+          <label class="slider-row">
+            <span>Spring Stiffness <em>k</em></span>
+            <input id="stiffness_slider" type="range" min="0.5" max="8" step="0.1" value="4.0" />
+            <output id="stiffness_value">4.0</output>
+          </label>
+
+          <label class="slider-row">
+            <span>Mass <em>m</em></span>
+            <input id="mass_slider" type="range" min="0.3" max="3" step="0.1" value="1.0" />
+            <output id="mass_value">1.0</output>
+          </label>
+
+          <label class="slider-row">
+            <span>Pulse Amplitude</span>
+            <input id="amplitude_slider" type="range" min="0.08" max="0.55" step="0.01" value="0.30" />
+            <output id="amplitude_value">0.30</output>
+          </label>
+
+          <label class="slider-row">
+            <span>Speed</span>
+            <input id="speed_slider" type="range" min="0.25" max="3" step="0.05" value="1.0" />
+            <output id="speed_value">1.00×</output>
+          </label>
+        </section>
+
+        <section class="control-group compact">
+          <label class="check-row">
+            <input id="continuum_checkbox" type="checkbox" />
+            <span>Show continuum approximation</span>
+          </label>
+          <p>Includes the first reflection at the right boundary</p>
+        </section>
+
+        <details class="control-group">
+          <summary>Periodic Excitation</summary>
+          <label class="check-row">
+            <input id="driver_checkbox" type="checkbox" />
+            <span>Enable signal generator</span>
+          </label>
+          <label class="slider-row">
+            <span>Frequency <em>f</em></span>
+            <input id="frequency_slider" type="range" min="0.05" max="0.80" step="0.01" value="0.20" />
+            <output id="frequency_value">0.20</output>
+          </label>
+        </details>
+
+        <details class="model-note">
+          <summary>Model</summary>
+          <p>Each column represents a material layer with a shared longitudinal displacement. The dynamics follow Newton’s second law and nearest-neighbor spring forces.</p>
+          <div class="formula">m üⱼ = k(uⱼ₊₁ − 2uⱼ + uⱼ₋₁)</div>
+        </details>
+      </aside>
+    </section>
+
+    <noscript>JavaScript must be enabled to run this applet.</noscript>
+  </main>
+</body>
+</html>
