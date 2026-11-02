@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#087f8c">
+  <meta name="description" content="Interaktives Modell zu Elementarmagneten, Weiss-Bezirken, Magnetisierung und thermischer Unordnung.">
+  <title>Elementarmagnete · Weiss-Bezirke</title>
+  <link rel="stylesheet" href="./style.css">
+
+  <script>
+    window.magnetAppletReady = false;
+    window.magnetLoadFailure = function (message) {
+      const panel = document.getElementById('loading-panel');
+      const title = document.getElementById('loading-title');
+      const details = document.getElementById('loading-details');
+      if (panel) { panel.hidden = false; panel.classList.add('load-error'); }
+      if (title) title.textContent = 'Das Applet konnte nicht starten.';
+      if (details) details.textContent = message;
+    };
+
+    document.addEventListener('DOMContentLoaded', function () {
+      if (location.protocol === 'file:') {
+        window.magnetLoadFailure(
+          'Bitte die drei Dateien über einen lokalen Webserver öffnen, z. B. mit: python -m http.server 8000'
+        );
+      }
+      window.setTimeout(function () {
+        if (!window.magnetAppletReady && location.protocol !== 'file:') {
+          const panel = document.getElementById('loading-panel');
+          const details = document.getElementById('loading-details');
+          if (details && panel && !panel.classList.contains('load-error')) {
+            details.textContent = 'Der erste Start kann länger dauern. PyScript und NumPy werden geladen.';
+          }
+        }
+      }, 45000);
+    });
+
+    window.addEventListener('unhandledrejection', function (event) {
+      console.error('Unbehandelter Fehler beim Applet-Start:', event.reason);
+      if (!window.magnetAppletReady) {
+        const reason = event.reason;
+        const message = reason?.stack || reason?.message || String(reason);
+        window.magnetLoadFailure(message);
+      }
+    });
+  </script>
+
+  <script id="pyscript-runtime" type="module"
+    src="https://pyscript.net/releases/2026.7.2/core.js"
+    onerror="window.magnetLoadFailure('PyScript konnte nicht geladen werden. Der Erststart benötigt Internetzugriff.');"></script>
+</head>
+
+<body>
+  <main class="page-shell">
+    <header class="page-header">
+      <h1>Elementarmagnete</h1>
+      <p class="intro">Lokale Ordnung, Weiss-Bezirke und Magnetisierung.</p>
+    </header>
+
+    <div class="workspace">
+      <section class="simulation-panel" aria-label="Visualisierung">
+        <div class="panel-heading">
+          <div class="live-label"><span id="run-dot" class="status-dot"></span><span id="run-label">Wird geladen</span></div>
+          <span id="material-badge" class="small-tag">Ferromagnet</span>
+        </div>
+
+        <div class="canvas-wrap">
+          <canvas id="simulation-canvas" width="1120" height="560"
+            aria-label="Elementarmagnete und verschiebbarer äußerer Magnet">
+            Die interaktive Darstellung benötigt Canvas und JavaScript.
+          </canvas>
+          <div id="loading-panel" class="loading-panel" role="status" aria-live="polite">
+            <span class="loading-spinner" aria-hidden="true"></span>
+            <strong id="loading-title">Python-Umgebung wird gestartet …</strong>
+            <p id="loading-details">PyScript und NumPy werden geladen.</p>
+          </div>
+        </div>
+      </section>
+
+      <aside class="controls-panel" aria-label="Experiment steuern">
+        <fieldset id="experiment-controls" disabled>
+          <legend class="sr-only">Experiment</legend>
+
+          <div class="control-section">
+            <h2>Probe</h2>
+            <label for="material">Material</label>
+            <select id="material">
+              <option value="soft">Weichferromagnetisch</option>
+              <option value="hard">Hartferromagnetisch</option>
+              <option value="para">Paramagnetisch</option>
+            </select>
+
+            <label for="initial-state">Startzustand</label>
+            <select id="initial-state">
+              <option value="domains">Mehrere Bezirke</option>
+              <option value="magnetized">Magnetisiert</option>
+            </select>
+          </div>
+
+          <div class="control-section">
+            <h2>Magnet</h2>
+            <div class="button-pair">
+              <button id="toggle-magnet" type="button"
+                class="button primary" aria-pressed="false">
+                Magnet an
+              </button>
+
+              <button id="flip-poles" type="button"
+                class="button" hidden>
+                Pole vertauschen
+              </button>
+            </div>
+          </div>
+
+          <div class="control-section">
+            <div class="range-heading">
+              <label for="temperature">Temperatur</label>
+              <output id="temperature-value" for="temperature">0,08</output>
+            </div>
+            <input id="temperature" type="range" min="0" max="4" step="0.02" value="0.08">
+            <div class="range-scale" aria-hidden="true"><span>niedrig</span><span>hoch</span></div>
+          </div>
+
+          <div class="control-section compact-control">
+            <label class="checkbox-label"><input id="show-field" type="checkbox" checked><span>Äußeres Magnetfeld anzeigen</span></label>
+          </div>
+
+          <div class="transport">
+            <button id="start-pause" class="button primary" type="button" aria-pressed="false">Pause</button>
+            <button id="reset" class="button" type="button">Zurücksetzen</button>
+          </div>
+        </fieldset>
+
+        <!-- Compatibility with main.py: these IDs are still checked on startup,
+             although the magnetization readout is no longer displayed. -->
+        <div hidden aria-hidden="true">
+          <output id="magnetization-value"></output>
+          <meter id="magnetization-meter" min="0" max="1" value="0"></meter>
+        </div>
+      </aside>
+    </div>
+
+    <section class="explanations" aria-label="Modell verstehen">
+      <details open>
+        <summary>Was lässt sich entdecken?</summary>
+        <div class="details-content experiments">
+          <p><strong>01 · Magnetisieren</strong>Schalte den Magneten ein und bewege ihn zur Probe.</p>
+          <p><strong>02 · Remanenz</strong>Schalte das Feld aus und vergleiche weich- und hartferromagnetische Proben.</p>
+          <p><strong>03 · Temperatur</strong>Erhöhe und senke die Modelltemperatur – mit und ohne äußeres Feld.</p>
+        </div>
+      </details>
+
+      <details>
+        <summary>Warum richten sich benachbarte Momente gemeinsam aus?</summary>
+        <div class="details-content">
+          <p>Die quantenmechanische <strong>Austauschwechselwirkung</strong> begünstigt die parallele Ausrichtung benachbarter magnetischer Momente. Das Applet stellt ihre Wirkung mit einem vereinfachten klassischen Modell dar.</p>
+        </div>
+      </details>
+
+      <details>
+        <summary>Modellannahmen und Grenzen</summary>
+        <div class="details-content">
+          <p><strong>Modell:</strong> Die Probe besteht aus einem zweidimensionalen Gitter repräsentativer magnetischer Momente. Berücksichtigt werden Austauschwechselwirkung, Anisotropie, Dipolwechselwirkung und äußeres Feld. Ein Pfeil entspricht nicht einem ganzen Weiss-Bezirk.</p>
+          <p><strong>Temperatur und Zeit:</strong> Die Momente zeigen Relaxation und thermische Fluktuationen. Temperatur und Zeit sind Modellgrößen; reale Curie-Temperaturen und Relaxationszeiten werden nicht berechnet.</p>
+          <p><strong>Näherungen:</strong> Der äußere Magnet wird durch mehrere Dipolquellen angenähert. Remanenz lässt sich qualitativ untersuchen; eine quantitative Hysteresekurve wird nicht berechnet.</p>
+          <p class="sources">Grundlagen: <a href="https://fidimag.readthedocs.io/en/latest/physics_num_methods/core_eqs.html" target="_blank" rel="noopener noreferrer">Fidimag</a> · <a href="https://math.nist.gov/oommf/doc/userguide21a2/userguide-xml/sec_oxsEnergies.html" target="_blank" rel="noopener noreferrer">NIST / OOMMF</a>.</p>
+        </div>
+      </details>
+    </section>
+
+  </main>
+
+  <noscript><p class="noscript-message">Bitte JavaScript aktivieren.</p></noscript>
+
+  <script
+    type="py"
+    src="./main.py"
+    config='{
+      "interpreter": "https://cdn.jsdelivr.net/pyodide/v0.29.0/full/pyodide.mjs",
+      "packages": ["numpy"],
+      "debug": true
+    }'>
+  </script>
+</body>
+</html>

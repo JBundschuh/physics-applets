@@ -1,0 +1,126 @@
+/* =============================================================================
+   Elementary magnets – responsive educational applet
+   ============================================================================= */
+
+/* 1. Base styles ------------------------------------------------------- */
+:root {
+  color-scheme: light;
+  --page: #f1f5f4;
+  --surface: #ffffff;
+  --ink: #1e293b;
+  --muted: #60717d;
+  --line: #dce5e5;
+  --teal: #087f8c;
+  --teal-dark: #06636e;
+  --teal-light: #edf7f6;
+  --north: #ca4c49; /* North: red */
+  --south: #356ab5; /* South: blue */
+  --radius: 14px;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-synthesis: none;
+}
+* { box-sizing: border-box; }
+body { margin: 0; color: var(--ink); background: var(--page); line-height: 1.5; }
+button, select, input { font: inherit; }
+button, select { -webkit-tap-highlight-color: transparent; }
+[hidden] { display: none !important; }
+a { color: var(--teal-dark); text-underline-offset: 3px; }
+a:hover { color: var(--ink); }
+button:focus-visible, input:focus-visible, select:focus-visible,
+summary:focus-visible, canvas:focus-visible, a:focus-visible {
+  outline: 3px solid #e6a843; outline-offset: 3px;
+}
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+.page-shell { max-width: 1510px; margin: auto; padding: 30px 32px 20px; }
+
+/* 2. Header ---------------------------------------------------------- */
+.page-header { display: flex; align-items: center; justify-content: space-between; gap: 20px; margin-bottom: 22px; }
+h1 { margin: 0; font-size: clamp(27px, 3vw, 37px); letter-spacing: -.045em; line-height: 1.15; font-weight: 740; }
+.intro { margin: 8px 0 0; color: var(--muted); font-size: 14px; }
+
+/* 3. Workspace and canvas -------------------------------------------- */
+.workspace { display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 18px; align-items: start; }
+.simulation-panel, .controls-panel { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); }
+.simulation-panel { overflow: hidden; }
+.panel-heading { padding: 13px 18px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--line); }
+.live-label { display: flex; gap: 8px; align-items: center; font-size: 12px; color: #42616a; }
+.status-dot { width: 7px; height: 7px; border-radius: 50%; background: #98aab0; }
+.status-dot.running { background: #259c87; box-shadow: 0 0 0 3px #eaf6f2; }
+.status-dot.paused { background: #c28a36; box-shadow: 0 0 0 3px #fbf4e8; }
+.small-tag { font-size: 11px; font-weight: 650; padding: 3px 8px; border-radius: 5px; background: var(--teal-light); color: var(--teal-dark); }
+.canvas-wrap { position: relative; background: #fcfcf8; }
+#simulation-canvas { display: block; width: 100%; height: auto; aspect-ratio: 1120 / 560; touch-action: none; cursor: default; }
+
+/* 4. Loading and errors ------------------------------------------------ */
+.loading-panel { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; background: #fcfcf8; padding: 32px; text-align: center; z-index: 2; }
+.loading-panel strong { font-size: 17px; }
+.loading-panel p { max-width: 440px; color: var(--muted); font-size: 13px; }
+.loading-spinner { width: 29px; height: 29px; margin-bottom: 18px; border: 3px solid #dceae8; border-top-color: var(--teal); border-radius: 50%; animation: spin .9s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.load-error { background: #fff8f5; }
+.load-error .loading-spinner { display: none; }
+.load-error strong { color: #9f342e; }
+.noscript-message { position: fixed; inset: auto 12px 12px; padding: 16px; background: #fff3ce; border: 1px solid #d7b357; border-radius: 8px; z-index: 30; }
+
+
+/* 5. Form controls ------------------------------------------ */
+.controls-panel { padding: 18px; }
+fieldset { padding: 0; border: 0; margin: 0; min-width: 0; }
+fieldset:disabled { opacity: .55; }
+.control-section { padding: 0 0 16px; margin: 0 0 16px; border-bottom: 1px solid var(--line); }
+h2 { font-size: 13px; line-height: 1.3; font-weight: 740; margin: 0 0 12px; }
+label { display: block; font-size: 12px; font-weight: 580; margin-bottom: 6px; }
+select { width: 100%; color: var(--ink); background: #fbfdfd; border: 1px solid #cbd8da; border-radius: 7px; padding: 9px 7px; margin-bottom: 10px; font-size: 12px; min-height: 39px; }
+select:disabled { color: #83949a; background: #f3f5f5; }
+.range-heading { display: flex; gap: 8px; justify-content: space-between; align-items: center; margin: 10px 0 3px; }
+.range-heading h2, .range-heading label { margin: 0; }
+.range-heading output { font-size: 12px; color: var(--teal-dark); font-variant-numeric: tabular-nums; font-weight: 650; }
+input[type="range"] { width: 100%; margin: 7px 0 3px; accent-color: var(--teal); cursor: pointer; min-height: 24px; }
+input[type="range"]:disabled { cursor: not-allowed; }
+.range-scale { display: flex; justify-content: space-between; font-size: 10px; color: var(--muted); margin-bottom: 4px; }
+.button-pair, .transport { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.button { border: 1px solid #cbd8da; background: #fff; color: #35535e; padding: 9px 6px; min-height: 40px; border-radius: 7px; cursor: pointer; font-size: 11px; font-weight: 650; transition: background .15s; }
+.button:hover:not(:disabled) { background: #f0f6f5; }
+.button.primary { background: var(--teal); border-color: var(--teal); color: white; }
+.button.primary:hover:not(:disabled) { background: var(--teal-dark); }
+.button:disabled { cursor: wait; }
+.checkbox-label { display: flex; align-items: flex-start; gap: 7px; font-size: 11px; line-height: 1.5; margin-top: 12px; margin-bottom: 0; }
+input[type="checkbox"] { margin: 2px 0 0; accent-color: var(--teal); flex-shrink: 0; }
+
+/* 6. Explanations -------------------------------------------------------- */
+.explanations { margin-top: 20px; border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; background: white; }
+.explanations details + details { border-top: 1px solid var(--line); }
+.explanations summary { cursor: pointer; font-size: 13px; font-weight: 650; padding: 16px 20px; }
+.explanations summary:hover { background: #fafcfc; }
+.details-content { padding: 0 20px 15px; color: #4f636b; font-size: 12px; line-height: 1.8; }
+.details-content p { margin: 0 0 10px; max-width: 1050px; }
+.experiments { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; }
+.experiments p { margin: 0; }
+.experiments strong { display: block; color: var(--teal-dark); font-size: 12px; margin-bottom: 5px; }
+.sources { font-size: 11px; }
+
+/* 7. Responsive layout and reduced motion --------------------------- */
+@media (max-width: 1050px) {
+  .page-shell { padding: 22px 18px; }
+  .workspace { grid-template-columns: minmax(0, 1fr); }
+  #experiment-controls { display: grid; grid-template-columns: 1fr 1fr; column-gap: 24px; align-items: start; }
+  .transport { grid-column: 1 / -1; }
+  .experiments { grid-template-columns: 1fr 1fr; gap: 18px; }
+}
+@media (max-width: 580px) {
+  .page-shell { padding: 18px 10px; }
+  .page-header { align-items: flex-start; margin-bottom: 16px; }
+  .intro { font-size: 12px; }
+  .controls-panel { padding: 15px; }
+  #experiment-controls { column-gap: 15px; }
+  .button-pair { grid-template-columns: 1fr; }
+  .loading-panel { padding: 15px; }
+  .loading-panel strong { font-size: 13px; }
+  .loading-panel p { font-size: 11px; }
+  .loading-spinner { width: 22px; height: 22px; margin-bottom: 8px; }
+  .experiments { grid-template-columns: 1fr; gap: 14px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .loading-spinner { animation: none; }
+  .button { transition: none; }
+}

@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#087f8c">
+  <meta name="description" content="Interactive model of elementary magnets, Weiss domains, magnetization, and thermal disorder.">
+  <title>Elementary Magnets · Weiss Domains</title>
+  <link rel="stylesheet" href="./style.css">
+  <script src="./main.js" defer></script>
+
+</head>
+
+<body>
+  <main class="page-shell">
+    <header class="page-header">
+      <h1>Elementary Magnets</h1>
+      <p class="intro">Local order, Weiss domains, and magnetization.</p>
+    </header>
+
+    <div class="workspace">
+      <section class="simulation-panel" aria-label="Visualization">
+        <div class="panel-heading">
+          <div class="live-label"><span id="run-dot" class="status-dot"></span><span id="run-label">Loading</span></div>
+          <span id="material-badge" class="small-tag">Ferromagnet</span>
+        </div>
+
+        <div class="canvas-wrap">
+          <canvas id="simulation-canvas" width="1120" height="560"
+            aria-label="Elementary magnets and a movable external bar magnet">
+            The interactive visualization requires Canvas and JavaScript.
+          </canvas>
+          <div id="loading-panel" class="loading-panel" role="status" aria-live="polite">
+            <span class="loading-spinner" aria-hidden="true"></span>
+            <strong id="loading-title">Starting simulation…</strong>
+            <p id="loading-details">Preparing the model.</p>
+          </div>
+        </div>
+      </section>
+
+      <aside class="controls-panel" aria-label="Experiment controls">
+        <fieldset id="experiment-controls" disabled>
+          <legend class="sr-only">Experiment</legend>
+
+          <div class="control-section">
+            <h2>Sample</h2>
+            <label for="material">Material</label>
+            <select id="material">
+              <option value="soft">Soft ferromagnet</option>
+              <option value="hard">Hard ferromagnet</option>
+              <option value="para">Paramagnet</option>
+            </select>
+
+            <label for="initial-state">Initial state</label>
+            <select id="initial-state">
+              <option value="domains">Multiple domains</option>
+              <option value="magnetized">Magnetized</option>
+            </select>
+          </div>
+
+          <div class="control-section">
+            <h2>Magnet</h2>
+            <div class="button-pair">
+              <button id="toggle-magnet" type="button"
+                class="button primary" aria-pressed="false">
+                Enable magnet
+              </button>
+
+              <button id="flip-poles" type="button"
+                class="button" hidden>
+                Reverse poles
+              </button>
+            </div>
+          </div>
+
+          <div class="control-section">
+            <div class="range-heading">
+              <label for="temperature">Temperature</label>
+              <output id="temperature-value" for="temperature">0.08</output>
+            </div>
+            <input id="temperature" type="range" min="0" max="4" step="0.02" value="0.08">
+            <div class="range-scale" aria-hidden="true"><span>low</span><span>high</span></div>
+          </div>
+
+          <div class="control-section compact-control">
+            <label class="checkbox-label"><input id="show-field" type="checkbox" checked><span>Show external magnetic field</span></label>
+          </div>
+
+          <div class="transport">
+            <button id="start-pause" class="button primary" type="button" aria-pressed="false">Pause</button>
+            <button id="reset" class="button" type="button">Reset</button>
+          </div>
+        </fieldset>
+
+      </aside>
+    </div>
+
+    <section class="explanations" aria-label="Understanding the model">
+      <details open>
+        <summary>What can you explore?</summary>
+        <div class="details-content experiments">
+          <p><strong>01 · Magnetization</strong>Enable the magnet and move it towards the sample.</p>
+          <p><strong>02 · Remanence</strong>Switch off the magnet and compare soft and hard ferromagnets.</p>
+          <p><strong>03 · Temperature</strong>Increase and decrease the model temperature, with and without the external field.</p>
+        </div>
+      </details>
+
+      <details>
+        <summary>Why do neighboring magnetic moments align?</summary>
+        <div class="details-content">
+          <p>The quantum-mechanical <strong>exchange interaction</strong> favors parallel alignment of neighboring magnetic moments. The applet represents its effects using a simplified classical model.</p>
+        </div>
+      </details>
+
+      <details>
+        <summary>Model assumptions and limitations</summary>
+        <div class="details-content">
+          <p><strong>Model:</strong> The sample is a two-dimensional grid of representative magnetic moments. Exchange, anisotropy, dipolar interactions, and the external field are included. One arrow does not represent an entire Weiss domain.</p>
+          <p><strong>Temperature and time:</strong> The moments undergo relaxation and thermal fluctuations. Temperature and time are dimensionless model quantities; actual Curie temperatures and relaxation times are not calculated.</p>
+          <p><strong>Approximations:</strong> The external magnet is approximated by multiple dipole sources. Remanence can be explored qualitatively; a quantitative hysteresis curve is not calculated.</p>
+          <p class="sources">References: <a href="https://fidimag.readthedocs.io/en/latest/physics_num_methods/core_eqs.html" target="_blank" rel="noopener noreferrer">Fidimag</a> · <a href="https://math.nist.gov/oommf/doc/userguide21a2/userguide-xml/sec_oxsEnergies.html" target="_blank" rel="noopener noreferrer">NIST / OOMMF</a>.</p>
+        </div>
+      </details>
+    </section>
+
+  </main>
+
+  <noscript><p class="noscript-message">Please enable JavaScript.</p></noscript>
+
+</body>
+</html>
