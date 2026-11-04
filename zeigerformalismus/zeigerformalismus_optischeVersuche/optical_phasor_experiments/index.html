@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Interactive phasor representations for thin-film interference, reflection and Fraunhofer diffraction." />
+  <title>Phasor Formalism – Optical Experiments</title>
+  <link rel="stylesheet" href="./style.css" />
+  <script src="./main.js" defer></script>
+</head>
+<body>
+  <header class="page-header">
+    <h1>Phasor Formalism – Optical Experiments</h1>
+    <p class="subtitle">Optical path → Phase → Field amplitude → Superposition → Intensity</p>
+  </header>
+
+  <main class="app-shell">
+    <section class="workspace" aria-label="Experiment visualization">
+      <nav class="experiment-tabs" role="tablist" aria-label="Select experiment">
+        <button type="button" role="tab" class="experiment-tab active" data-experiment="film" aria-selected="true" aria-controls="film-controls">Thin Glass Film</button>
+        <button type="button" role="tab" class="experiment-tab" data-experiment="mirror" aria-selected="false" aria-controls="mirror-controls">Mirror</button>
+        <button type="button" role="tab" class="experiment-tab" data-experiment="diffraction" aria-selected="false" aria-controls="diffraction-controls">Diffraction</button>
+      </nav>
+
+      <div class="visual-card">
+        <div class="canvas-toolbar">
+          <span id="interaction-hint">Adjust the film thickness and refractive index.</span>
+        </div>
+        <div class="canvas-wrap">
+          <canvas id="experiment-canvas" width="1200" height="720" aria-label="Optical geometry, phasor representation and resulting graph">
+            Your browser does not support the canvas element.
+          </canvas>
+          <div id="app-status" class="loading-status" role="status">Loading visualization…</div>
+        </div>
+        <div class="readout-grid" aria-live="polite">
+          <div class="readout-box">
+            <span id="readout-label-1" class="readout-label">Thickness d</span>
+            <strong id="readout-value-1">–</strong>
+          </div>
+          <div class="readout-box">
+            <span id="readout-label-2" class="readout-label">Phase difference</span>
+            <strong id="readout-value-2">–</strong>
+          </div>
+          <div class="readout-box">
+            <span id="readout-label-3" class="readout-label">Field amplitude |E|</span>
+            <strong id="readout-value-3">–</strong>
+          </div>
+          <div class="readout-box">
+            <span id="readout-label-4" class="readout-label">Reflectance R</span>
+            <strong id="readout-value-4">–</strong>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <aside class="control-panel" aria-label="Controls">
+      <section class="control-card">
+        <h2>Light</h2>
+        <label class="field-label" for="wavelength-slider">Wavelength λ</label>
+        <div class="slider-row">
+          <input id="wavelength-slider" type="range" min="380" max="740" step="1" value="540" />
+          <span id="wavelength-readout" class="slider-value">540 nm</span>
+        </div>
+        <div class="color-preview-row">
+          <span id="color-preview" class="color-preview" aria-hidden="true"></span>
+          <span id="color-name">green</span>
+        </div>
+      </section>
+
+      <section id="film-controls" class="control-card scene-controls" role="tabpanel">
+        <label class="field-label" for="thickness-slider">Film thickness d</label>
+        <div class="slider-row">
+          <input id="thickness-slider" type="range" min="0" max="1200" step="2" value="270" />
+          <span id="thickness-readout" class="slider-value">270 nm</span>
+        </div>
+        <label class="field-label" for="index-slider">Refractive index n</label>
+        <div class="slider-row">
+          <input id="index-slider" type="range" min="1" max="2" step="0.01" value="1.50" />
+          <span id="index-readout" class="slider-value">1.50</span>
+        </div>
+        <label class="check-row">
+          <input id="compare-toggle" type="checkbox" />
+          <span>Second wavelength</span>
+        </label>
+        <div id="compare-controls" class="sub-controls hidden">
+          <label class="field-label" for="compare-wavelength-slider">Wavelength λ₂</label>
+          <div class="slider-row compact-row">
+            <input id="compare-wavelength-slider" type="range" min="380" max="740" step="1" value="650" />
+            <span id="compare-wavelength-readout" class="slider-value">650 nm</span>
+          </div>
+        </div>
+      </section>
+
+      <section id="mirror-controls" class="control-card scene-controls hidden" role="tabpanel">
+        <h2>Mirror</h2>
+        <label class="field-label" for="segment-slider">Mirror regions</label>
+        <div class="slider-row">
+          <input id="segment-slider" type="range" min="7" max="61" step="2" value="21" />
+          <span id="segment-readout" class="slider-value">21</span>
+        </div>
+        <label class="check-row">
+          <input id="classic-toggle" type="checkbox" checked />
+          <span>Classical reflection path</span>
+        </label>
+        <label class="check-row">
+          <input id="path-graph-toggle" type="checkbox" />
+          <span>Optical path graph L(x)</span>
+        </label>
+      </section>
+
+      <section id="diffraction-controls" class="control-card scene-controls hidden" role="tabpanel">
+        <h2>Fraunhofer Diffraction</h2>
+        <label class="field-label" for="slit-select">Aperture type</label>
+        <select id="slit-select">
+          <option value="single">Single slit</option>
+          <option value="double">Double slit</option>
+        </select>
+        <label class="field-label top-gap" for="slit-width-slider">Slit width a</label>
+        <div class="slider-row">
+          <input id="slit-width-slider" type="range" min="2" max="30" step="0.5" value="8" />
+          <span id="slit-width-readout" class="slider-value">8.0 µm</span>
+        </div>
+        <div id="slit-distance-controls" class="hidden">
+          <label class="field-label" for="slit-distance-slider">Center-to-center distance d</label>
+          <div class="slider-row">
+            <input id="slit-distance-slider" type="range" min="5" max="60" step="0.5" value="24" />
+            <span id="slit-distance-readout" class="slider-value">24.0 µm</span>
+          </div>
+        </div>
+        <label class="field-label" for="angle-slider">Observation angle θ</label>
+        <div class="slider-row">
+          <input id="angle-slider" type="range" min="-10" max="10" step="0.05" value="2" />
+          <span id="angle-readout" class="slider-value">2.00°</span>
+        </div>
+        <label class="field-label" for="slit-segments-slider">Phasor contributions</label>
+        <div class="slider-row">
+          <input id="slit-segments-slider" type="range" min="20" max="100" step="2" value="50" />
+          <span id="slit-segments-readout" class="slider-value">50</span>
+        </div>
+        <label id="separate-row" class="check-row hidden">
+          <input id="separate-slits-toggle" type="checkbox" checked />
+          <span>Show separate slit contributions</span>
+        </label>
+      </section>
+
+      <button type="button" id="formula-toggle" class="formula-button" aria-controls="formula-panel" aria-expanded="false">Show formulas</button>
+    </aside>
+  </main>
+
+  <section id="formula-panel" class="formula-panel hidden" aria-label="Model equations">
+    <div class="formula-header">
+      <h2 id="formula-title">Thin Glass Film</h2>
+      <span id="formula-model-note" class="formula-model-note"></span>
+    </div>
+    <div id="formula-content" class="formula-grid"></div>
+  </section>
+</body>
+</html>

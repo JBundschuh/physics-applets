@@ -1,0 +1,190 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Zeigerformalismus – Grundlagen</title>
+  <link rel="stylesheet" href="./style.css" />
+  <script type="module" src="https://pyscript.net/releases/2024.3.2/core.js"></script>
+</head>
+<body>
+    <header class="page-header">
+      <div>
+        <h1>Zeigerformalismus – Grundlagen</h1>
+        <p class="subtitle">
+          Vektoren und Zeiger addieren, Phasen und Betragsquadrate verstehen.
+        </p>
+      </div>
+    </header>
+
+  <main class="app-shell">
+    <section class="visual-card">
+        <div class="canvas-toolbar">
+          <span id="interaction-hint">
+            Zum Zeichnen klicken und ziehen. Pfeile können aneinander einrasten.
+          </span>
+          <div id="mode-badge" class="mode-badge">Vektormodus</div>
+        </div>
+
+      <canvas id="phasor-canvas" width="1100" height="680" aria-label="Interaktives Canvas zum Zeigerformalismus"></canvas>
+
+      <div class="readout-grid">
+        <article class="readout-box">
+          <span class="readout-label">Anzahl</span>
+          <strong id="count-readout">0</strong>
+        </article>
+        <article class="readout-box">
+          <span class="readout-label">Resultierende</span>
+          <strong id="result-readout">R = 0,00</strong>
+        </article>
+        <article class="readout-box">
+          <span class="readout-label">Phase</span>
+          <strong id="phase-readout">φ = –</strong>
+        </article>
+        <article class="readout-box">
+          <span class="readout-label">Betragsquadrat</span>
+          <strong id="square-readout">|R|² = 0,00</strong>
+        </article>
+      </div>
+    </section>
+
+    <aside class="control-panel">
+        <section class="control-card">
+          <label class="field-label" for="mode-select">Darstellung</label>
+          <select id="mode-select">
+            <option value="vector" selected>Freier Vektormodus</option>
+            <option value="qed">Zeigermodus</option>
+          </select>
+        </section>
+
+        <section class="control-card">
+          <h2>Zeichnen</h2>
+        
+          <label class="field-label" for="preset-select">Preset</label>
+          <select id="preset-select">
+            <option value="free" selected>Freies Zeichnen</option>
+            <option value="constructive">Konstruktive Interferenz</option>
+            <option value="destructive">Destruktive Interferenz</option>
+            <option value="right_angle">Phasendifferenz 90°</option>
+            <option value="six_steps">Sechs Beiträge</option>
+            <option value="circle_cancel">Kreisförmige Anordnung</option>
+            <option value="near_phase">Nahezu gleiche Phasen</option>
+          </select>
+        
+          <div class="button-row">
+            <button id="undo-button" type="button">Letzten löschen</button>
+            <button id="delete-button" type="button">Ausgewählten löschen</button>
+            <button id="reset-button" type="button" class="danger">Alle löschen</button>
+          </div>
+        </section>
+
+        <section class="control-card">
+          <h2>Anzeige</h2>
+        
+          <label class="check-row">
+            <input id="result-toggle" type="checkbox" checked />
+            <span>Resultierende</span>
+          </label>
+        
+          <label class="check-row">
+            <input id="phase-toggle" type="checkbox" checked />
+            <span>Phase</span>
+          </label>
+        
+          <label class="check-row">
+            <input id="square-toggle" type="checkbox" checked />
+            <span>Betragsquadrat als Fläche</span>
+          </label>
+        
+          <label class="check-row">
+            <input id="individual-toggle" type="checkbox" />
+            <span>Zeigerlängen</span>
+          </label>
+        
+          <label class="check-row">
+            <input id="axis-label-toggle" type="checkbox" />
+            <span>Achsenbeschriftung</span>
+          </label>
+        
+          <label class="check-row">
+            <input id="formula-toggle" type="checkbox" />
+            <span>Formeln</span>
+          </label>
+        </section>
+
+      <section id="qed-controls" class="control-card hidden">
+        <h2>Farbe und Phase</h2>
+        <label class="field-label" for="wavelength-slider">Wellenlänge λ</label>
+        <div class="slider-row">
+          <input id="wavelength-slider" type="range" min="380" max="740" step="1" value="540" />
+          <span id="wavelength-readout" class="slider-value">540 nm</span>
+        </div>
+        <div class="color-preview-row">
+          <span id="color-preview" class="color-preview"></span>
+          <span id="color-name">grün</span>
+        </div>
+
+        <label class="field-label" for="path-slider">Wegunterschied Δs</label>
+        <div class="slider-row">
+          <input id="path-slider" type="range" min="0" max="2000" step="5" value="540" />
+          <span id="path-readout" class="slider-value">540 nm</span>
+        </div>
+        <p class="control-hint">
+          Die Regler bestimmen die Phase des Beispielzeigers:  φ = 2π · Δs / λ.
+        </p>
+      </section>
+    </aside>
+  </main>
+
+      <section id="formula-panel" class="formula-panel hidden">
+    
+      <div class="formula-header">
+        <h2>Zeiger und Formeln</h2>
+      </div>
+    
+      <div class="formula-grid">
+    
+        <article class="formula-card">
+          <h3>1. Komplexer Zeiger</h3>
+          <code>
+            z = A · e<sup>iφ</sup> = A · (cos φ + i sin φ)
+          </code>
+        </article>
+    
+        <article class="formula-card">
+          <h3>2. Zeigeraddition</h3>
+          <code id="sum-formula">
+            R = Σ v<sub>n</sub> = (0,00; 0,00)
+          </code>
+        </article>
+    
+        <article class="formula-card">
+          <h3>3. Betragsquadrat</h3>
+          <p>
+            Die Quadratfläche veranschaulicht das Betragsquadrat.
+          </p>
+          <code id="probability-formula">
+            |R|² = 0,00
+          </code>
+        </article>
+    
+        <article class="formula-card">
+          <h3>4. Phase durch Wegunterschied</h3>
+          <code id="path-phase-formula">
+            φ = 2π · Δs / λ
+          </code>
+          <p class="formula-note compact">
+            λ = <span id="formula-lambda">540 nm</span>,
+            Δs = <span id="formula-path">540 nm</span>,
+            φ mod 2π = <span id="formula-phase">0,00 rad</span>
+          </p>
+        </article>
+    
+      </div>
+    </section>
+
+  
+
+  <script type="py" src="./main.py"></script>
+</body>
+</html>

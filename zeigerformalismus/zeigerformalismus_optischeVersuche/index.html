@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Drei interaktive Versuche zum Zeigerformalismus: dünne Glasschicht, Spiegel und Fraunhofer-Beugung." />
+    <title>Versuche zum Zeigerformalismus</title>
+
+    <link rel="stylesheet" href="https://pyscript.net/releases/2026.7.2/core.css" />
+    <script type="module" src="https://pyscript.net/releases/2026.7.2/core.js"></script>
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+
+  <body>
+    <header class="page-header">
+      <h1>Zeigerformalismus – Optische Versuche</h1>
+      <p class="subtitle">
+        Weglänge → Phase → Feldamplitude → Überlagerung → Intensität
+      </p>
+    </header>
+
+    <main class="app-shell">
+      <section class="workspace" aria-label="Versuchsansicht">
+        <nav class="experiment-tabs" aria-label="Versuch auswählen">
+          <button class="experiment-tab active" data-experiment="film" aria-selected="true">
+            Dünne Glasschicht
+          </button>
+          <button class="experiment-tab" data-experiment="mirror" aria-selected="false">
+            Spiegel
+          </button>
+          <button class="experiment-tab" data-experiment="diffraction" aria-selected="false">
+            Beugung
+          </button>
+        </nav>
+
+        <div class="visual-card">
+            <div class="canvas-toolbar">
+              <span id="interaction-hint">
+                Variiere Schichtdicke und Brechungsindex.
+              </span>
+            </div>
+
+          <div class="canvas-wrap">
+            <canvas id="experiment-canvas" width="1200" height="720">
+              Dein Browser unterstützt das Canvas-Element nicht.
+            </canvas>
+            <div id="py-status" class="loading-status" role="status">Python wird geladen …</div>
+          </div>
+
+          <div class="readout-grid" aria-live="polite">
+            <div class="readout-box">
+              <span id="readout-label-1" class="readout-label">Dicke d</span>
+              <strong id="readout-value-1">–</strong>
+            </div>
+            <div class="readout-box">
+              <span id="readout-label-2" class="readout-label">Phasendifferenz</span>
+              <strong id="readout-value-2">–</strong>
+            </div>
+            <div class="readout-box">
+              <span id="readout-label-3" class="readout-label">Feldamplitude |E|</span>
+              <strong id="readout-value-3">–</strong>
+            </div>
+            <div class="readout-box">
+              <span id="readout-label-4" class="readout-label">Reflexion R</span>
+              <strong id="readout-value-4">–</strong>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <aside class="control-panel" aria-label="Steuerung">
+        <section class="control-card">
+          <h2>Licht</h2>
+          <label class="field-label" for="wavelength-slider">Wellenlänge λ</label>
+          <div class="slider-row">
+            <input id="wavelength-slider" type="range" min="380" max="740" step="1" value="540" />
+            <span id="wavelength-readout" class="slider-value">540 nm</span>
+          </div>
+          <div class="color-preview-row">
+            <span id="color-preview" class="color-preview"></span>
+            <span id="color-name">grün</span>
+          </div>
+        </section>
+
+        <section id="film-controls" class="control-card scene-controls">
+          
+          <label class="field-label" for="thickness-slider">Dicke d</label>
+          <div class="slider-row">
+            <input id="thickness-slider" type="range" min="0" max="1200" step="2" value="270" />
+            <span id="thickness-readout" class="slider-value">270 nm</span>
+          </div>
+
+          <label class="field-label" for="index-slider">Brechungsindex n</label>
+          <div class="slider-row">
+            <input id="index-slider" type="range" min="1" max="2" step="0.01" value="1.50" />
+            <span id="index-readout" class="slider-value">1,50</span>
+          </div>
+
+          <label class="check-row">
+            <input id="compare-toggle" type="checkbox" />
+            <span>Zweite Wellenlänge</span>
+          </label>
+          <div id="compare-controls" class="sub-controls hidden">
+            <label class="field-label" for="compare-wavelength-slider">Wellenlänge λ₂</label>
+            <div class="slider-row compact-row">
+              <input id="compare-wavelength-slider" type="range" min="380" max="740" step="1" value="650" />
+              <span id="compare-wavelength-readout" class="slider-value">650 nm</span>
+            </div>
+          </div>
+        </section>
+
+        <section id="mirror-controls" class="control-card scene-controls hidden">
+          <h2>Spiegel</h2>
+          <label class="field-label" for="segment-slider">Spiegelbereiche</label>
+          <div class="slider-row">
+            <input id="segment-slider" type="range" min="7" max="61" step="2" value="21" />
+            <span id="segment-readout" class="slider-value">21</span>
+          </div>
+          <label class="check-row">
+            <input id="classic-toggle" type="checkbox" checked />
+            <span>Klassischer Reflexionsweg</span>
+          </label>
+          <label class="check-row">
+            <input id="path-graph-toggle" type="checkbox" />
+            <span>Weglängendiagramm L(x)</span>
+          </label>
+        </section>
+
+        <section id="diffraction-controls" class="control-card scene-controls hidden">
+          <h2>Fraunhofer-Beugung</h2>
+          <label class="field-label" for="slit-select">Öffnung</label>
+          <select id="slit-select">
+            <option value="single">Einzelspalt</option>
+            <option value="double">Doppelspalt</option>
+          </select>
+
+          <label class="field-label top-gap" for="slit-width-slider">Spaltbreite a</label>
+          <div class="slider-row">
+            <input id="slit-width-slider" type="range" min="2" max="30" step="0.5" value="8" />
+            <span id="slit-width-readout" class="slider-value">8,0 µm</span>
+          </div>
+
+          <div id="slit-distance-controls" class="hidden">
+            <label class="field-label" for="slit-distance-slider">Mittenabstand d</label>
+            <div class="slider-row">
+              <input id="slit-distance-slider" type="range" min="5" max="60" step="0.5" value="24" />
+              <span id="slit-distance-readout" class="slider-value">24,0 µm</span>
+            </div>
+          </div>
+
+          <label class="field-label" for="angle-slider">Beobachtungswinkel θ</label>
+          <div class="slider-row">
+            <input id="angle-slider" type="range" min="-10" max="10" step="0.05" value="2" />
+            <span id="angle-readout" class="slider-value">2,00°</span>
+          </div>
+
+          <label class="field-label" for="slit-segments-slider">Zeigerbeiträge</label>
+          <div class="slider-row">
+            <input id="slit-segments-slider" type="range" min="20" max="100" step="2" value="50" />
+            <span id="slit-segments-readout" class="slider-value">50</span>
+          </div>
+
+          <label id="separate-row" class="check-row hidden">
+            <input id="separate-slits-toggle" type="checkbox" checked />
+            <span>Spaltbeiträge getrennt anzeigen</span>
+          </label>
+        </section>
+
+        <button id="formula-toggle" class="formula-button" aria-expanded="false">
+          Formelmodus anzeigen
+        </button>
+      </aside>
+    </main>
+
+    <section id="formula-panel" class="formula-panel hidden" aria-label="Formelmodus">
+      <div class="formula-header">
+        <h2 id="formula-title">Dünne Glasschicht</h2>
+        <span id="formula-model-note" class="formula-model-note"></span>
+      </div>
+    
+      <div id="formula-content" class="formula-grid"></div>
+    </section>
+
+    
+    <script type="py" src="./main.py"></script>
+  </body>
+</html>

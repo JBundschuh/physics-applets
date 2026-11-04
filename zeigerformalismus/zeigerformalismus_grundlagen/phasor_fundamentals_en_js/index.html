@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Interactive introduction to vector and phasor addition, phase, and squared magnitude.">
+  <title>Phasor Formalism – Fundamentals</title>
+  <link rel="stylesheet" href="./style.css">
+  <script src="./main.js" defer></script>
+</head>
+<body>
+  <header class="page-header">
+    <h1>Phasor Formalism – Fundamentals</h1>
+    <p class="subtitle">Add vectors and phasors, explore phase and squared magnitude.</p>
+  </header>
+
+  <main class="app-shell">
+    <section class="visual-card" aria-label="Interactive vector and phasor diagram">
+      <div class="canvas-toolbar">
+        <span id="interaction-hint">Click and drag to draw. Arrows can snap together.</span>
+        <span id="mode-badge" class="mode-badge">Vector mode</span>
+      </div>
+
+      <canvas id="phasor-canvas" width="1100" height="680"
+        aria-label="Interactive coordinate plane for drawing and adding vectors and phasors">
+        An HTML Canvas-compatible browser is required.
+      </canvas>
+
+      <div class="readout-grid" aria-label="Calculated values">
+        <article class="readout-box">
+          <span class="readout-label">Count</span>
+          <strong id="count-readout">0</strong>
+        </article>
+        <article class="readout-box">
+          <span class="readout-label">Resultant</span>
+          <strong id="result-readout">|R| = 0.00</strong>
+        </article>
+        <article class="readout-box">
+          <span class="readout-label">Phase</span>
+          <strong id="phase-readout">φ = –</strong>
+        </article>
+        <article class="readout-box">
+          <span class="readout-label">Squared magnitude</span>
+          <strong id="square-readout">|R|² = 0.00</strong>
+        </article>
+      </div>
+    </section>
+
+    <aside class="control-panel" aria-label="Controls">
+      <section class="control-card">
+        <label class="field-label" for="mode-select">Display mode</label>
+        <select id="mode-select">
+          <option value="vector" selected>Free vector mode</option>
+          <option value="phasor">Phasor mode</option>
+        </select>
+      </section>
+
+      <section class="control-card">
+        <h2>Drawing</h2>
+        <label class="field-label" for="preset-select">Preset</label>
+        <select id="preset-select">
+          <option value="free" selected>Free drawing</option>
+          <option value="constructive">Constructive interference</option>
+          <option value="destructive">Destructive interference</option>
+          <option value="right_angle">90° phase difference</option>
+          <option value="six_steps">Six contributions</option>
+          <option value="circle_cancel">Circular arrangement</option>
+          <option value="near_phase">Nearly equal phases</option>
+        </select>
+
+        <div class="button-row">
+          <button id="undo-button" type="button">Remove last</button>
+          <button id="delete-button" type="button">Delete selected</button>
+          <button id="reset-button" type="button" class="danger">Clear all</button>
+        </div>
+      </section>
+
+      <section class="control-card">
+        <h2>Display</h2>
+        <label class="check-row">
+          <input id="result-toggle" type="checkbox" checked>
+          <span>Resultant</span>
+        </label>
+        <label class="check-row">
+          <input id="phase-toggle" type="checkbox" checked>
+          <span>Phase</span>
+        </label>
+        <label class="check-row">
+          <input id="square-toggle" type="checkbox" checked>
+          <span>Squared magnitude as area</span>
+        </label>
+        <label class="check-row">
+          <input id="individual-toggle" type="checkbox">
+          <span>Individual magnitudes</span>
+        </label>
+        <label class="check-row">
+          <input id="axis-label-toggle" type="checkbox">
+          <span>Axis labels</span>
+        </label>
+        <label class="check-row">
+          <input id="formula-toggle" type="checkbox">
+          <span>Equations</span>
+        </label>
+      </section>
+
+      <section id="phasor-controls" class="control-card hidden">
+        <h2>Color and phase</h2>
+        <label class="field-label" for="wavelength-slider">Wavelength λ</label>
+        <div class="slider-row">
+          <input id="wavelength-slider" type="range" min="380" max="740" step="1" value="540">
+          <output id="wavelength-readout" class="slider-value" for="wavelength-slider">540 nm</output>
+        </div>
+        <div class="color-preview-row">
+          <span id="color-preview" class="color-preview" aria-hidden="true"></span>
+          <span id="color-name">green</span>
+        </div>
+
+        <label class="field-label" for="path-slider">Path difference Δs</label>
+        <div class="slider-row">
+          <input id="path-slider" type="range" min="0" max="2000" step="5" value="540">
+          <output id="path-readout" class="slider-value" for="path-slider">540 nm</output>
+        </div>
+        <p class="control-hint">These sliders set the phase of the example phasor: φ = 2π · Δs / λ.</p>
+      </section>
+    </aside>
+  </main>
+
+  <section id="formula-panel" class="formula-panel hidden" aria-label="Phasor equations">
+    <div class="formula-header">
+      <h2>Phasors and equations</h2>
+    </div>
+
+    <div class="formula-grid">
+      <article class="formula-card">
+        <h3>1. Complex phasor</h3>
+        <code>z = A · e<sup>iφ</sup> = A · (cos φ + i sin φ)</code>
+      </article>
+
+      <article class="formula-card">
+        <h3 id="sum-heading">2. Vector addition</h3>
+        <code id="sum-formula">R = Σ v<sub>n</sub> = (0.00; 0.00)</code>
+      </article>
+
+      <article class="formula-card">
+        <h3>3. Squared magnitude</h3>
+        <p>The square's area illustrates the squared magnitude.</p>
+        <code id="magnitude-formula">|R|² = 0.00</code>
+      </article>
+
+      <article class="formula-card">
+        <h3>4. Phase from path difference</h3>
+        <code id="path-phase-formula">φ = 2π · Δs / λ</code>
+        <p class="formula-note compact">
+          λ = <span id="formula-lambda">540 nm</span>,
+          Δs = <span id="formula-path">540 nm</span>,
+          φ mod 2π = <span id="formula-phase">0.00 rad</span>
+        </p>
+      </article>
+    </div>
+  </section>
+
+  <noscript><p class="noscript-note">Enable JavaScript to use the interactive applet.</p></noscript>
+</body>
+</html>

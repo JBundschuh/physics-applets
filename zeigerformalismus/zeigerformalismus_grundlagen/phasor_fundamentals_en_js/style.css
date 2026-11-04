@@ -1,0 +1,242 @@
+:root {
+  color-scheme: light;
+  --bg: #f4f6fb;
+  --card: #ffffff;
+  --card-soft: #f8fafc;
+  --ink: #142033;
+  --muted: #657286;
+  --line: #d8e0ec;
+  --line-soft: #e9eef6;
+  --accent: #4257ff;
+  --accent-dark: #2637c9;
+  --danger: #b3261e;
+  --shadow: 0 18px 50px rgba(22, 32, 51, 0.10);
+  --radius: 22px;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  color: var(--ink);
+  background:
+    radial-gradient(circle at top left, rgba(66, 87, 255, 0.10), transparent 35rem),
+    linear-gradient(180deg, #fbfcff 0%, var(--bg) 100%);
+}
+
+.page-header, .app-shell, .formula-panel {
+  width: min(1500px, calc(100vw - 40px));
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.page-header { padding: 34px 0 18px; }
+h1, h2, h3, p { margin-top: 0; }
+h1 {
+  margin-bottom: 8px;
+  font-size: clamp(2rem, 4vw, 3.4rem);
+  line-height: 1.02;
+  letter-spacing: -0.04em;
+}
+h2 { margin-bottom: 14px; font-size: 1.05rem; }
+h3 { margin-bottom: 8px; font-size: 1rem; }
+.subtitle {
+  max-width: 820px;
+  margin-bottom: 0;
+  color: var(--muted);
+  font-size: 1.05rem;
+}
+
+.app-shell {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 340px;
+  gap: 22px;
+  align-items: start;
+}
+
+.visual-card, .control-card, .formula-panel {
+  background: rgba(255, 255, 255, 0.94);
+  border: 1px solid rgba(216, 224, 236, 0.92);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+.visual-card { min-width: 0; overflow: hidden; }
+.canvas-toolbar {
+  min-height: 56px;
+  padding: 14px 18px;
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  align-items: center;
+  border-bottom: 1px solid var(--line-soft);
+  background: rgba(248, 250, 252, 0.85);
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+.mode-badge {
+  flex: 0 0 auto;
+  padding: 7px 11px;
+  border-radius: 999px;
+  background: #eef1ff;
+  color: var(--accent-dark);
+  font-size: 0.82rem;
+  font-weight: 800;
+}
+#phasor-canvas {
+  display: block;
+  width: 100%;
+  height: auto;
+  background: #fbfdff;
+  cursor: crosshair;
+  touch-action: none;
+}
+
+.readout-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1px;
+  background: var(--line-soft);
+  border-top: 1px solid var(--line-soft);
+}
+.readout-box {
+  min-width: 0;
+  min-height: 80px;
+  padding: 16px 18px;
+  background: #fff;
+}
+.readout-label {
+  display: block;
+  margin-bottom: 5px;
+  color: var(--muted);
+  font-size: 0.76rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.readout-box strong { font-size: 1.15rem; overflow-wrap: anywhere; }
+.control-panel { display: grid; gap: 16px; }
+.control-card { padding: 18px; }
+.field-label {
+  display: block;
+  margin: 0 0 7px;
+  color: var(--muted);
+  font-size: 0.82rem;
+  font-weight: 800;
+}
+select, button, input[type="range"] { font: inherit; }
+select {
+  width: 100%;
+  padding: 11px 12px;
+  color: var(--ink);
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 13px;
+}
+button {
+  border: 0;
+  border-radius: 13px;
+  padding: 10px 12px;
+  background: #eef1ff;
+  color: var(--accent-dark);
+  font-weight: 800;
+  cursor: pointer;
+}
+button:hover { background: #e2e7ff; }
+button.danger { color: var(--danger); background: #fff0ee; }
+button.danger:hover { background: #ffe1dd; }
+button:focus-visible, select:focus-visible, input:focus-visible, canvas:focus-visible {
+  outline: 3px solid #f0aa44;
+  outline-offset: 3px;
+}
+.button-row { display: grid; grid-template-columns: 1fr; gap: 8px; margin-top: 12px; }
+.check-row {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  padding: 8px 0;
+  color: var(--ink);
+  font-size: 0.94rem;
+}
+.check-row input { margin-top: 3px; accent-color: var(--accent); }
+.control-hint, .formula-note { color: var(--muted); font-size: 0.9rem; line-height: 1.5; }
+.control-hint { margin: 10px 0 0; }
+.slider-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 72px;
+  gap: 10px;
+  align-items: center;
+  margin-bottom: 12px;
+}
+input[type="range"] { accent-color: var(--accent); }
+.slider-value {
+  color: var(--muted);
+  font-size: 0.88rem;
+  font-weight: 800;
+  text-align: right;
+}
+.color-preview-row {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin: 4px 0 16px;
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+.color-preview {
+  display: inline-block;
+  width: 34px;
+  height: 22px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: #43c05b;
+  box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.55);
+}
+.formula-panel { margin-top: 22px; padding: 22px; }
+.formula-header { margin-bottom: 18px; }
+.formula-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+}
+.formula-card {
+  min-width: 0;
+  padding: 16px;
+  border: 1px solid var(--line-soft);
+  border-radius: 18px;
+  background: var(--card-soft);
+}
+.formula-card p { color: var(--muted); line-height: 1.48; margin-bottom: 0.65rem; }
+.formula-card code {
+  display: block;
+  margin-top: 0.75rem;
+  padding: 0.95rem 1rem;
+  overflow-wrap: anywhere;
+  border-radius: 14px;
+  background: #f5f7fb;
+  color: #111827;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+  font-size: clamp(1.05rem, 1.5vw, 1.4rem);
+  line-height: 1.55;
+  font-weight: 700;
+  white-space: normal;
+}
+.formula-note.compact { margin-top: 0.7rem; font-size: 0.95rem; }
+.hidden { display: none !important; }
+.noscript-note { margin: 20px auto; max-width: 800px; text-align: center; color: var(--danger); }
+
+@media (max-width: 1120px) {
+  .app-shell { grid-template-columns: 1fr; }
+  .control-panel { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .formula-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 760px) {
+  .page-header, .app-shell, .formula-panel { width: min(100vw - 24px, 1500px); }
+  .canvas-toolbar { flex-direction: column; align-items: flex-start; }
+  .readout-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .control-panel { grid-template-columns: 1fr; }
+  .formula-grid { grid-template-columns: 1fr; }
+  .readout-box { min-height: 70px; padding: 12px; }
+  .readout-box strong { font-size: 1rem; }
+  .formula-card code { font-size: 1.1rem; }
+}
